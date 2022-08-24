@@ -1,0 +1,156 @@
+
+/* Invoice Section */
+
+/* h1,h2,h3,h4,h5,h6,p {
+    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+
+.font1 {
+    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+} */
+
+
+#invoice {
+    width: 70%;
+    margin: 0 auto;
+    background: #eee;
+  }
+  
+  .invoiceContent {
+    width: 100%;
+    padding: 30px 50px;
+    margin: 70px 0;
+    background: #fff;
+  }
+  
+  .invHeaderTop {
+    width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 30px 10px;
+  }
+  
+  .invHeaderTop h1 {
+    text-transform: uppercase;
+    font-size: 2.7em;
+    color: #b11b00;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    letter-spacing: -2px;
+  }
+  
+  .invHeaderTop h4 {
+    font-size: 1.1em;
+    color: #1e262e;
+    font-weight: 500;
+    margin: 10px 0;
+    letter-spacing: 2px;
+  }
+  
+  #slip_top {
+      text-align: center;
+      /* letter-spacing: 1px; */
+  }
+  
+  #slip_top h4 {
+    margin: 0;
+      /* line-height: 20px; */
+      /* background: chartreuse; */
+  }
+
+  .col_faint {
+      /* opacity: 0.4; */
+      text-transform: uppercase;
+      color: rgb(153, 153, 153);
+  }
+  
+  #slip_mid {
+      padding: 20px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      border: 2px solid #1e262e;
+  }
+
+  #slip_mid p {
+      margin: 0;
+      padding: 0;
+      /* background: #b11b00; */
+  }
+
+  .align_left {
+      text-align: left;
+  }
+
+  .align_right {
+      text-align: right!important;
+  }
+
+  .float_right {
+      float: right;
+  }
+
+  .dark_col {
+      color: #202020;
+  } 
+
+  #slip_center {
+      width: 100%;
+  }
+
+  .my_tbl1 {
+      width: 100%;
+      /* margin: 20px; */
+      margin-bottom: 15px;
+      color: #494949;
+      border-bottom: 2px solid #1e262e;
+  }
+
+  .my_tbl1 td {
+      padding: 20px;
+  }
+
+  .my_tbl1 td {
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+  }
+
+  .course_code {
+      padding-left: 15px!important;
+      width: 20%;
+  }
+
+  .small_p {
+      color: #707070;
+      font-size: 0.8em;
+      margin-top: -15px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media print {
+    #invoice {
+      width: 100%;
+      display: block !important;
+    }
+  
+    .delAdd {
+      margin-right: 100px;
+    }
+  
+    .invHeaderTop h1 {
+      text-transform: uppercase;
+      margin-top: -100px;
+      color: #b11b00!important;
+    }
+  }
+  

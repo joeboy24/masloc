@@ -1,0 +1,98 @@
+
+
+.car_header {
+    width: 100%;
+    height: 750px;
+    /* padding: 100px ; */
+    background: url(../images/picanto/c2.webp);
+    background-size: 100%;
+    /* background: url(../images/Bg-f1f1f1_2.jpg); */
+  }
+  
+  .car_searchby {
+    /* width: 35%;
+    height: 600px; */
+    padding: 30px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.795);
+  }
+  
+  .car_searchby h2 {
+    font-weight: 700;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+  }
+
+  .search_sel {
+    width: 100%;
+    height: 40px;
+    padding: 5px 10px;
+    border: none;
+    margin: 7px 0;
+    color: rgb(100, 100, 100);
+  }
+
+  .double_select {
+    width: 100%;
+  }
+
+  .ds, .search_input {
+    width: 49%;
+    height: 40px;
+    padding: 5px 10px;
+    border: none;
+    margin: 7px 0;
+    color: rgb(100, 100, 100);
+  }
+
+  .ds1 {
+    float: left;
+  }
+
+  .ds2 {
+    float: right;
+  }
+
+  .car_searchby button {
+    width: 49%;
+    height: 40px;
+    border: none;
+    color: #fff;
+    margin-top: 15px;
+    border-radius: 3px;
+    background: rgb(255, 76, 31);
+  }
+
+  .car_searchby button:hover {
+    width: 49%;
+    height: 40px;
+    color: #fff;
+    margin-top: 15px;
+    border-radius: 5px;
+    background: #000;
+    /* background: rgba(255, 255, 255, 0.795); */
+    /* border: 1px solid #000; */
+  }
+
+.color1 { color: rgb(255, 0, 106); }
+.color2 { color: rgb(234, 0, 255); }
+.color3 { color: rgb(35, 137, 255); }
+.color4 { color: rgb(29, 207, 190) }
+.color5 { color: rgb(111, 0, 255); }
+.color6 { color: rgb(255, 0, 76); }
+.color7 { color: rgb(255, 196, 0) }
+.color8 { color: rgb(255, 255, 255) }
+.color10 { color: rgb(46, 46, 46) }
+.color11 { color: rgb(255, 76, 31) }
+
+.bg1 { background: rgb(255, 0, 106); }
+.bg2 { background: rgb(234, 0, 255); }
+.bg3 { background: rgb(35, 137, 255); }
+.bg4 { background: rgb(55, 255, 178) }
+.bg5 { background: rgb(111, 0, 255); }
+.bg6 { background: rgb(255, 0, 76); }
+.bg7 { background: rgb(255, 196, 0) }
+.bg8 { background: rgb(255, 255, 255) }
+.bg9 { background: rgb(249, 249, 249) }
+.bg10 { background: rgb(46, 46, 46) }
