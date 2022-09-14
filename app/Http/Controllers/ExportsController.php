@@ -42,7 +42,7 @@ class ExportsController extends Controller
         // foreach ($taxes as $tax) {
         //     array_push($tx, [
         //         'A' => $tax->employee->fname.' '.$tax->employee->sname.' '.$tax->employee->oname,
-        //         'B' => $tax->position,
+        //         'B' => $tax->cur_pos,
         //         'C' => $tax->salary,
         //         'D' => $tax->rent,
         //         'E' => $tax->prof,

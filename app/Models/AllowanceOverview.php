@@ -10,7 +10,7 @@ class AllowanceOverview extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','rent','prof','resp','risk','vma','ent','dom','intr','tnt','ssf','ssf1','ssf2'
+        'user_id','rent','prof','resp','risk','vma','ent','dom','intr','tnt','cola','ssf','ssf1','ssf2','new1','new2','new3','new4','new5'
     ];
 
 }

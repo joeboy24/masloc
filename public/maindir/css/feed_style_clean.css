@@ -60,11 +60,17 @@ body{
     /* opacity: 0.5; */
 }
 
+.logo_top {
+    width: 100px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
 .logo_text1 {
     color: #000;
     font-size: 0.9em;
     margin-top: 10px;
-    text-align: center  ;
+    text-align: center;
 }
 
 .home_top {
@@ -248,8 +254,8 @@ body{
 }
 
 .lock_container {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     z-index: 2;
     position: relative;
     margin: 0 auto;
@@ -261,7 +267,7 @@ body{
 
 .lock_container i {
     color: rgb(37, 37, 37);
-    font-size: 8em;
+    font-size: 5em;
     margin-top: 20px;
 }
 
@@ -289,10 +295,27 @@ body{
     text-transform: uppercase;
 }
 
+.login_btn:hover {
+    opacity: 0.8;
+}
+
 .login_btn2 {
     width: 130px;
     margin: 0 calc((100% - 130px)/2);
     border: none;
+}
+
+.logos_div {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.logos_div img {
+    width: 70px;
+}
+
+.logo_img2 {
+    float: right;
 }
 
 .browse_col {
@@ -1201,9 +1224,9 @@ body{
         box-shadow: 0 1px 13px 4px rgba(0, 83, 138, 0.048);
     }
 
-    .login_content{
+    /* .login_content{
         width: 90%;
-    }
+    } */
 
     .menu_content button {
         width: 45%;

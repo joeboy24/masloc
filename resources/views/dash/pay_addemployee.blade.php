@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -135,8 +135,15 @@
 
     <div class="page-heading">
         <h3><i class="fa fa-address-book color6"></i>&nbsp;&nbsp;Add Employee</h3>
-        <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i>&nbsp; Print Emp. Report</p></a>
-        <a href="#"><button type="submit" class="print_btn_small"><i class="fa fa-refresh"></i></button></a>
+        <form action="{{ action('EmployeeController@store') }}" method="POST">
+            @csrf
+            <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
+            {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a>
+            <a href="/taxexport"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Download Excel</p></a> --}}
+            <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button>
+        </form>
+        {{-- <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i>&nbsp; Print Emp. Report</p></a>
+        <a href="#"><button type="submit" class="print_btn_small"><i class="fa fa-refresh"></i></button></a> --}}
     </div>
 
     <div class="row">
@@ -190,6 +197,11 @@
                             <div class="filter_div">
                                 <i class="fa fa-user"></i> &nbsp; Other Names
                                 <input type="text" name="oname" placeholder="Optional">
+                            </div>
+                    
+                            <div class="filter_div">
+                                <i class="fa fa-calendar"></i> &nbsp; Date of Birth
+                                <input type="date" name="dob" required>
                             </div>
                     
                             <div class="filter_div">
@@ -267,7 +279,7 @@
                                 <select name="dept">
                                     <option value="all" selected>Choose Department</option>
                                     @foreach ($department as $dept)
-                                        <option>{{$dept->dept}}</option>
+                                        <option>{{$dept->dept_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -285,14 +297,19 @@
                             <div class="filter_div" id="region">
                                 <i class="fa fa-globe"></i> &nbsp; Region
                                 <select name="region">
-                                    <option value="all" selected>All Regions</option>
+                                    <option value="all" selected>Select Region</option>
                                     @foreach ($regions as $reg)
                                         <option>{{$reg->region}}</option>
                                     @endforeach
                                     @foreach ($main_regions as $mreg)
-                                        <option>{{$mreg->reg_name}} Region</option>
+                                        <option>{{$mreg->reg_name}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                    
+                            <div class="filter_div">
+                                <i class="fa fa-calendar"></i> &nbsp; Date Employed
+                                <input type="date" name="date_emp" required>
                             </div>
                     
                             <div class="filter_div">
@@ -303,10 +320,13 @@
                             <div class="filter_div" id="bankdiv">
                                 <i class="fa fa-bank"></i> &nbsp; Bank Name
                                 <select name="bank" id="bank" onchange="bankcheck()">
-                                    <option value="all" selected>All Banks</option>
+                                    <option value="all" selected>Choose Bank</option>
                                     <option value="na">Not Available</option>
                                     @foreach ($banks as $bk)
-                                        <option>{{$bk->bank}}</option>
+                                        <option value="{{$bk->bank_id}}">{{$bk->bank}}</option>
+                                    @endforeach
+                                    @foreach ($banks2 as $bk2)
+                                        <option value="{{$bk2->id}}">{{$bk2->bank_abr}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -330,6 +350,11 @@
                             <div class="filter_div" id="newbranch">
                                 <i class="fa fa-edit"></i> &nbsp; New Branch
                                 <input type="text" name="branch2" placeholder="Type New Branch Here">
+                            </div>
+                    
+                            <div class="filter_div">
+                                <i class="fa fa-camera"></i> &nbsp; Photo
+                                <input type="file" name="pass_photo">
                             </div>
 
                             <script>
@@ -382,6 +407,7 @@
                                 <label class="col-md-5" for="domAlw"><input id="domAlw" type="checkbox" name="dom_allow"> &nbsp; Domestic </label>
                                 <label class="col-md-5" for="intrAlw"><input id="intrAlw" type="checkbox" name="intr_allow"> &nbsp; Internet & Others </label>
                                 <label class="col-md-5" for="tntAlw"><input id="tntAlw" type="checkbox" name="tnt_allow"> &nbsp; T & T </label>
+                                <label class="col-md-5" for="colaAlw"><input id="colaAlw" type="checkbox" name="cola_allow"> &nbsp; Cola </label>
 
                                 @foreach ($allowances as $item)
                                     <label class="col-md-5" for="Alw{{$item->id}}"><input id="Alw{{$item->id}}" type="checkbox" name="allow{{$item->id}}"> &nbsp; {{$item->allow_name}} </label>

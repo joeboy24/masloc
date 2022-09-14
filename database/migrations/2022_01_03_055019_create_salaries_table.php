@@ -36,6 +36,11 @@ class CreateSalariesTable extends Migration
             $table->string('dom')->default(0);
             $table->string('intr')->default(0);
             $table->string('tnt')->default(0);
+            $table->string('new1')->default(0);
+            $table->string('new2')->default(0);
+            $table->string('new3')->default(0);
+            $table->string('new4')->default(0);
+            $table->string('new5')->default(0);
             $table->string('back_pay')->default(0);
             $table->string('net_bef_ded')->default(0);
             $table->string('staff_loan')->default(0);

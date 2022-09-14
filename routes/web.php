@@ -41,6 +41,7 @@ Route::get('/add_employee', 'DashpagesController@pay_add_emp');
 Route::get('/sal_cat', 'DashpagesController@pay_sal_cat');
 Route::get('/add_dept', 'DashpagesController@pay_add_dept');
 Route::get('/adduser', 'DashpagesController@pay_adduser');
+Route::get('/companysetup', 'DashpagesController@pay_company');
 Route::get('/allowance_mgt', 'DashpagesController@pay_allowance_mgt');
 // HR Pages
 Route::get('/leaves', 'HrpagesController@pay_leave');

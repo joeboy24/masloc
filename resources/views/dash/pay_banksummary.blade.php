@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -157,6 +157,7 @@
  
                                     @if ($c == 1)
                                         <div class="banksum">
+                                            {{-- <h4>{{$i.' - '.$banks[$i-1]->id.' - '.$banks[$i-1]->bank_fullname}}</h4> --}}
                                             <h4>{{$banks[$i-1]->bank_fullname}}</h4>
                                             <p>PAYROLL FOR MASLOC</p>
                                             <p>PMB CT 261, CANTONMENTS, ACCRA</p>
@@ -177,7 +178,7 @@
                                     <tbody>
                                         <input type="hidden" value="{{$sum = 0}}">
                                         @foreach ($salaries as $sal)
-                                            @if ($sal->employee->bank_id == $i)
+                                            @if ($sal->employee->bank_id == $banks[$i-1]->id)
                                                 @if ($c % 2 == 1)
                                                     <tr class="bg9">
                                                 @else

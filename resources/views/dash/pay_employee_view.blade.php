@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item active">
                         <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -132,8 +132,16 @@
 
     <div class="page-heading">
         <h3><i class="fa fa-file-text color6"></i>&nbsp;&nbsp;Employee Management</h3>
-        <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i>&nbsp; Print Emp. Report</p></a>&nbsp;
-        <a href="#"><button type="submit" class="print_btn_small"><i class="fa fa-refresh"></i></button></a>
+
+        <form action="{{ action('EmployeeController@store') }}" method="POST">
+            @csrf
+            <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
+            <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i></p></a>
+            {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a>
+            <a href="/taxexport"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Download Excel</p></a> --}}
+            <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button>
+        </form>
+
         <div class="row">
             <div class="col-12 col-md-8">
                 <form action="{{ action('EmployeeController@store') }}" method="POST">
@@ -184,7 +192,7 @@
                                                 <p class="small_p">SSN: {{ $emp->ssn }}</p>
                                                 <p class="small_p_black">Phone: {{ $emp->contact }}</p>
                                             </td>
-                                            <td class="text-bold-500">{{ $emp->position }}
+                                            <td class="text-bold-500">{{ $emp->cur_pos }}
                                                 <p class="small_p">Dept.: {{ $emp->dept }}</p>
                                             </td>
                                             <td class="text-bold-500">{{ number_format($emp->salary, 2) }}<br>
@@ -210,9 +218,9 @@
                                                         {{-- <button type="submit" name="update_action" value="del_employee" class="my_trash"><i class="fa fa-folder-open"></i></button> --}}
                                                         {{-- <button type="submit" value="add_leave" class="my_trash2 green_bg color8 genhover"><i class="fa fa-print"></i>&nbsp; Leave</button> --}}
                                                         @if ($emp->status == 'inactive')
-                                                            <button type="button" class="my_trash_small bg7" onclick="alert('You can only resume leave from the `Leave Mgt.` page')"><i class="fa fa-clipboard"></i></button>
+                                                            <button type="button" class="my_trash_small bg7" onclick="alert('You can only resume leave from the `Leave Mgt.` page')"><i class="fa fa-leaf"></i></button>
                                                         @else
-                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#leave{{$emp->id}}" class="my_trash_small"><i class="fa fa-clipboard"></i></button>
+                                                            <button type="button" data-bs-toggle="modal" data-bs-target="#leave{{$emp->id}}" class="my_trash_small"><i class="fa fa-leaf"></i></button>
                                                         @endif
                                                         <button type="button" data-bs-toggle="modal" data-bs-target="#edit{{$emp->id}}" class="my_trash_small"><i class="fa fa-pencil"></i></button>
                                                         <button type="submit" name="update_action" value="del_employee" class="my_trash_small" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fa fa-trash"></i></button>
@@ -327,52 +335,64 @@
                                                         @csrf
                                                         <div class="modal-body">
                                                             
-                                                            <div class="col-md-12">
-                                                                <label>First Name</label>
-                                                                <div class="form-group has-icon-left">
-                                                                    <div class="position-relative">
-                                                                        <input name="fname" type="text" class="form-control" placeholder="First Name" id="first-name-icon" value="{{ $emp->fname }}" required>
-                                                                        <div class="form-control-icon">
-                                                                            <i class="bi bi-person"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="filter_div" id="">
+                                                                <i class="fa fa-building"></i>&nbsp;&nbsp; AFIS No.
+                                                                <input name="afis_no" type="text" class="form-control" placeholder="AFIS No." id="first-name-icon" value="{{ $emp->afis_no }}" required>
                                                             </div>
                                                             
-                                                            <div class="col-md-12">
-                                                                <label>Surname</label>
-                                                                <div class="form-group has-icon-left">
-                                                                    <div class="position-relative">
-                                                                        <input name="sname" type="text" class="form-control" placeholder="Surname" id="first-name-icon" value="{{ $emp->sname }}" required>
-                                                                        <div class="form-control-icon">
-                                                                            <i class="bi bi-person"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="filter_div" id="">
+                                                                <i class="fa fa-user"></i>&nbsp;&nbsp; First Name
+                                                                <input name="fname" type="text" class="form-control" placeholder="First Name" id="first-name-icon" value="{{ $emp->fname }}" required>
                                                             </div>
                                                             
-                                                            <div class="col-md-12">
-                                                                <label>Other Names</label>
-                                                                <div class="form-group has-icon-left">
-                                                                    <div class="position-relative">
-                                                                        <input name="oname" type="text" class="form-control" placeholder="Other Names" id="first-name-icon" value="{{ $emp->oname }}">
-                                                                        <div class="form-control-icon">
-                                                                            <i class="bi bi-person"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="filter_div" id="">
+                                                                <i class="fa fa-user"></i>&nbsp;&nbsp; Surname
+                                                                <input name="sname" type="text" class="form-control" placeholder="Surname" id="first-name-icon" value="{{ $emp->sname }}" required>
                                                             </div>
                                                             
-                                                            <div class="col-md-12">
-                                                                <label>Contact</label>
-                                                                <div class="form-group has-icon-left">
-                                                                    <div class="position-relative">
-                                                                        <input name="contact" type="number" min="0" class="form-control" placeholder="Contact" id="first-name-icon" value="{{ $emp->contact }}" required>
-                                                                        <div class="form-control-icon">
-                                                                            <i class="bi bi-phone"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="filter_div" id="">
+                                                                <i class="fa fa-user"></i>&nbsp;&nbsp; Other Names
+                                                                <input name="oname" type="text" class="form-control" placeholder="Other Names" id="first-name-icon" value="{{ $emp->oname }}">
+                                                            </div>
+                                                            
+                                                            <div class="filter_div" id="">
+                                                                <i class="fa fa-phone"></i>&nbsp;&nbsp; Contact
+                                                                <input name="contact" type="number" min="0" class="form-control" placeholder="Contact" id="first-name-icon" value="{{ $emp->contact }}" required>
+                                                            </div>
+
+                                                            <div class="filter_div">
+                                                                <i class="fa fa-dot-circle-o"></i> &nbsp; Position
+                                                                <select name="position">
+                                                                    <option value="all" selected>Choose Position</option>
+                                                                    @foreach ($position as $post)
+                                                                        @if ($emp->cur_pos == $post->position)    
+                                                                            <option selected>{{$post->position}}</option>
+                                                                        @else
+                                                                            <option>{{$post->position}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="filter_div" id="region">
+                                                                <i class="fa fa-globe"></i> &nbsp; Region
+                                                                <select name="region">
+                                                                    <option value="all" selected>Select Region</option>
+                                                                    @foreach ($regions as $reg)
+                                                                        @if ($emp->region == $reg->region)    
+                                                                            <option selected>{{$reg->region}}</option>
+                                                                        @else
+                                                                            <option>{{$reg->region}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                    @foreach ($main_regions as $mreg)
+                                                                        @if ($emp->region == $mreg->region)    
+                                                                            <option selected>{{$mreg->reg_name}}</option>
+                                                                        @else
+                                                                            <option>{{$mreg->reg_name}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                             
                                                         </div> 

@@ -310,7 +310,7 @@
         }
 
         .small_p {
-            margin: 5px 0 0 0;
+            margin: 7px 0 0 0;
             font-size: 0.9em;
             color: #4486e9;
         }
@@ -627,7 +627,7 @@
                                                 <td class="col-sm-1 pl">{{$c++}}</td>
                                                 <td class="col-sm-3 pl cap1`"><h4>{{ $sal->employee->fname.' '.$sal->employee->sname.' '.$sal->employee->oname }}</h4>
                                                     <p>SSN. : {{ $sal->ssn }}</p>
-                                                    <p class="small_p">Pos. : {{ $sal->position }}</p>
+                                                    <p class="small_p">Pos. : {{ $sal->cur_pos }}</p>
                                                     <p class="small_p">Region : {{ $sal->region }}</p>
                                                     <p class="small_p">Email : {{ $sal->email }}</p>
                                                     <p>Dept. : {{ $sal->dept }}</p>
@@ -733,7 +733,7 @@
                                             <tr>
                                                 <td class="col-sm-1 pl">{{$c++}}</td>
                                                 <td class="col-sm-3 pl cap1`"><h4>{{ $tax->employee->fname.' '.$tax->employee->sname.' '.$tax->employee->oname }}</h4>
-                                                    <p class="small_p">Pos. : {{ $tax->position }}</p>
+                                                    <p class="small_p">Pos. : {{ $tax->cur_pos }}</p>
                                                 </td>
                                                 <td class="col-sm-3 pl">{{number_format($tax->salary, 2)}}
                                                     <p class="small_p">{{date('M Y', strtotime('01-'.$tax->month))}}</p>
@@ -828,7 +828,7 @@
                                                 <td class="col-sm-3 pl"><h4>{{ $emp->fname.' '.$emp->sname.' '.$emp->oname }}</h4>
                                                     <p class="small_p">SSN: {{ $emp->ssn }}</p>
                                                 </td>
-                                                <td class="col-sm-3 pl"><h4>{{ $emp->position }}</h4>
+                                                <td class="col-sm-3 pl"><h4>{{ $emp->cur_pos }}</h4>
                                                     <p>Dept.: {{ $emp->dept }}</p>
                                                 </td>
                                                 <td class="col-sm-3 pl"><h4>{{ number_format($emp->salary, 2) }}</h4>

@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -171,8 +171,62 @@
                                         <th>{{$allowoverview->vma}}% V.M.A Allow</th>
                                         <th>{{$allowoverview->ent}}% Entertainment Allow</th>
                                         <th>{{$allowoverview->dom}}% Domestic Help</th>
-                                        <th>{{$allowoverview->intr}}% Internet & Other Utilities</th>
-                                        <th>{{$allowoverview->tnt}}% T&T Allow</th>
+                                        <th>{{$allowoverview->intr}} Internet & Other Utilities</th>
+                                        <th>{{$allowoverview->tnt}} T&T Allow</th>
+
+                                        @if ($allowoverview->new1 != 0)
+                                            @if ($new_allows[0]->allow_perc != 0)
+                                                <th>{{$allowoverview->new1}}% {{substr($new_allows[0]->allow_name, 0, 10)}}...</th>
+                                            @else
+                                                <th>{{$allowoverview->new1}} {{substr($new_allows[0]->allow_name, 0, 10)}}...</th>
+                                            @endif
+                                        @else
+                                            <th>Empty</th>
+                                        @endif
+
+                                        @if ($allowoverview->new2 != 0)
+                                            @if ($new_allows[1]->allow_perc != 0)
+                                                <th>{{$allowoverview->new2}}% {{substr($new_allows[1]->allow_name, 0, 10)}}...</th>
+                                            @else
+                                                <th>{{$allowoverview->new2}} {{substr($new_allows[1]->allow_name, 0, 10)}}...</th>
+                                            @endif
+                                        @else
+                                            <th>Empty</th>
+                                        @endif
+
+                                        @if ($allowoverview->new3 != 0)
+                                            @if ($new_allows[2]->allow_perc != 0)
+                                                <th>{{$allowoverview->new3}}% {{substr($new_allows[2]->allow_name, 0, 10)}}...</th>
+                                            @else
+                                                <th>{{$allowoverview->new3}} {{substr($new_allows[2]->allow_name, 0, 10)}}...</th>
+                                            @endif
+                                        @else
+                                            <th>Empty</th>
+                                        @endif
+
+                                        @if ($allowoverview->new4 != 0)
+                                            @if ($new_allows[3]->allow_perc != 0)
+                                                <th>{{$allowoverview->new4}}% {{substr($new_allows[3]->allow_name, 0, 10)}}...</th>
+                                            @else
+                                                <th>{{$allowoverview->new4}} {{substr($new_allows[3]->allow_name, 0, 10)}}...</th>
+                                            @endif
+                                        @else
+                                            <th>Empty</th>
+                                        @endif
+
+                                        @if ($allowoverview->new5 != 0)
+                                            @if ($new_allows[4]->allow_perc != 0)
+                                                <th>{{$allowoverview->new5}}% {{substr($new_allows[4]->allow_name, 0, 10)}}...</th>
+                                            @else
+                                                <th>{{$allowoverview->new5}} {{substr($new_allows[4]->allow_name, 0, 10)}}...</th>
+                                            @endif
+                                        @else
+                                            <th>Empty</th>
+                                        @endif
+
+                                        {{-- @foreach ($new_allows as $nalws)
+                                            <th>{{$allowoverview->tnt}} T&T Allow</th>
+                                        @endforeach --}}
                                         <th>Back Pay</th>
                                         <th>Net Salary Before Deduction</th>
                                         <th>Staff Loan</th>
@@ -216,6 +270,14 @@
                                             <td class="text-bold-500">{{number_format($slr->dom, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->intr, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->tnt, 2)}}</td>
+                                            {{-- @if ($allowoverview->new1 != 0)
+                                                
+                                            @endif --}}
+                                            <td class="text-bold-500">{{number_format($slr->new1, 2)}}</td>
+                                            <td class="text-bold-500">{{number_format($slr->new2, 2)}}</td>
+                                            <td class="text-bold-500">{{number_format($slr->new3, 2)}}</td>
+                                            <td class="text-bold-500">{{number_format($slr->new4, 2)}}</td>
+                                            <td class="text-bold-500">{{number_format($slr->new5, 2)}}</td>
 
                                             <td class="text-bold-500">{{number_format($slr->back_pay, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->net_bef_ded, 2)}}</td>

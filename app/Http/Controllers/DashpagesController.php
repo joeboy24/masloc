@@ -30,6 +30,11 @@ class DashpagesController extends Controller
         $this->middleware(['auth', 'admin_auth']);
     } 
 
+    public function pay_company(){
+        $company = Company::find(1);
+        return view('dash.pay_company')->with('company', $company);
+    }
+
     public function pay_loan(){
         // $users = User::where('status', '!=', 'Student')->get();
         $loan_setup = LoanSetup::where('del', 'no')->latest()->first();
@@ -46,6 +51,9 @@ class DashpagesController extends Controller
     public function pay_tax(){
         $taxation = Taxation::where('month', date('m-Y'))->paginate(50);
         $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+        if ($allowoverview == '') {
+            return redirect(url()->previous())->with('error', 'Oops..! Define Allowance Percentages to proceed @ -> Employee -> Allowances -> Allowance/SSNIT Overview');
+        }
         $patch = [
             'c' => 1,
             'taxation' => $taxation,
@@ -76,9 +84,13 @@ class DashpagesController extends Controller
         // return number_format($sum1-$sum2, 2).' = '.$sum1.' [-] '.$sum2;
         $salaries = Salary::where('month', date('m-Y'))->paginate(50);
         $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+        if ($allowoverview == '') {
+            return redirect(url()->previous())->with('error', 'Oops..! Define Allowance Percentages to proceed @ -> Employee -> Allowances -> Allowance/SSNIT Overview');
+        }
         $patch = [
             'c' => 1,
             'salaries' => $salaries,
+            'new_allows' => AllowanceList::all(),
             'allowoverview' => $allowoverview
         ];
         return view('dash.pay_salary')->with($patch);
@@ -133,8 +145,10 @@ class DashpagesController extends Controller
 
     public function pay_add_emp(){
         // $users = User::where('status', '!=', 'Student')->get();
-        $department = Employee::select('dept')->orderBy('dept', 'ASC')->distinct('dept')->get();
+        $department = Department::orderBy('dept_name', 'ASC')->get();
+        // $department = Employee::select('dept')->orderBy('dept', 'ASC')->distinct('dept')->get();
         $banks = Employee::select('bank')->orderBy('bank', 'ASC')->distinct('bank')->get();
+        $banks2 = Bank::all();
         $regions = Employee::select('region')->orderBy('region', 'ASC')->distinct('region')->get();
         $position = SalaryCat::orderBy('position', 'ASC')->get();
         $title = SalaryCat::select('title')->orderBy('title', 'ASC')->distinct('title')->get();
@@ -145,6 +159,7 @@ class DashpagesController extends Controller
         $patch = [
             'c' => 1,
             'banks' => $banks,
+            'banks2' => $banks2,
             'regions' => $regions,
             'main_regions' => Region::all(),
             'position' => $position,

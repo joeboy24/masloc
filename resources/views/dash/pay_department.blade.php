@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="submenu active">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>

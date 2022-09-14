@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -226,19 +226,40 @@
                                                          <button type="submit" name="update_action" value="remove_dom" class="allow_btn bg4" onclick="return confirm('Do you want to disable Domenstic Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Domenstic</button>
                                                      @endif
 
-                                                     <!-- Internet Allowance -->
-                                                      @if ($alw->intr == 'no') 
-                                                          <button type="submit" name="update_action" value="set_intr" class="allow_btn color1" onclick="return confirm('Do you want to enable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; Int. & Util.</button>
-                                                      @else
-                                                          <button type="submit" name="update_action" value="remove_intr" class="allow_btn bg4" onclick="return confirm('Do you want to disable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Int. & Util.</button>
-                                                      @endif
+                                                    <!-- Internet Allowance -->
+                                                    @if ($alw->intr == 'no') 
+                                                        <button type="submit" name="update_action" value="set_intr" class="allow_btn color1" onclick="return confirm('Do you want to enable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; Int. & Util.</button>
+                                                    @else
+                                                        <button type="submit" name="update_action" value="remove_intr" class="allow_btn bg4" onclick="return confirm('Do you want to disable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Int. & Util.</button>
+                                                    @endif
   
-                                                     <!-- TnT Allowance -->
-                                                      @if ($alw->tnt == 'no') 
-                                                          <button type="submit" name="update_action" value="set_tnt" class="allow_btn color1" onclick="return confirm('Do you want to enable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; T & T</button>
-                                                      @else
-                                                          <button type="submit" name="update_action" value="remove_tnt" class="allow_btn bg4" onclick="return confirm('Do you want to disable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; T & T</button>
-                                                      @endif
+                                                    <!-- TnT Allowance -->
+                                                    @if ($alw->tnt == 'no') 
+                                                        <button type="submit" name="update_action" value="set_tnt" class="allow_btn color1" onclick="return confirm('Do you want to enable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; T & T</button>
+                                                    @else
+                                                        <button type="submit" name="update_action" value="remove_tnt" class="allow_btn bg4" onclick="return confirm('Do you want to disable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; T & T</button>
+                                                    @endif
+
+                                                    <!-- Cola Allowance -->
+                                                    @if ($alw->cola == 'no') 
+                                                        <button type="submit" name="update_action" value="set_cola" class="allow_btn color1" onclick="return confirm('Do you want to enable Cola Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; Cola</button>
+                                                    @else
+                                                        <button type="submit" name="update_action" value="remove_cola" class="allow_btn bg4" onclick="return confirm('Do you want to disable Cola Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Cola</button>
+                                                    @endif
+                                                    
+                                                    <!-- New Allowances -->
+                                                    @if (count($new_allows) > 0)
+                                                        @for ($y = 1; $y <= count($new_allows); $y++)
+                                                            <input type="hidden" value="{{$val = 'new'.$y}}">
+                                                            @if ($alw->$val == 'no') 
+                                                                <button type="submit" name="update_action" value="{{'set_new'.$y}}" class="allow_btn color1" onclick="return confirm('Do you want to enable {{$new_allows[$y-1]->allow_name}} for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; {{substr($new_allows[$y-1]->allow_name, 0, 10)}}...</button>
+                                                            @else
+                                                                <button type="submit" name="update_action" value="{{'remove_new'.$y}}" class="allow_btn bg4" onclick="return confirm('Do you want to disable {{$new_allows[$y-1]->allow_name}} for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; {{substr($new_allows[$y-1]->allow_name, 0, 10)}}...</button>
+                                                            @endif
+                                                        @endfor
+                                                        {{-- @foreach ($new_allow as $na)
+                                                        @endforeach --}}
+                                                    @endif
 
                                                     <script>
                                                         function textfill{{$alw->id}}() {
@@ -311,64 +332,83 @@
 
                     <div class="filter_div">
                         <i class="fa fa-home"></i>&nbsp;&nbsp; Rent
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->rent}}" @endif min="0" max="100" placeholder="Rent Allowance eg. 15" name="rent">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->rent}}" @endif min="0" max="100" placeholder="Rent Allowance eg. 15" name="rent" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-check-square"></i>&nbsp;&nbsp;&nbsp; Prof.
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->prof}}" @endif min="0" max="100" name="prof">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->prof}}" @endif min="0" max="100" name="prof" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-briefcase"></i>&nbsp;&nbsp; Resp.
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->resp}}" @endif min="0" max="100" name="resp">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->resp}}" @endif min="0" max="100" name="resp" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;Risk
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->risk}}" @endif min="0" max="100" name="risk">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->risk}}" @endif min="0" max="100" name="risk" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-car"></i>&nbsp;&nbsp;&nbsp;VMA
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->vma}}" @endif min="0" max="100" name="vma">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->vma}}" @endif min="0" max="100" name="vma" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-headphones"></i>&nbsp;&nbsp;&nbsp;&nbsp;Ent.
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ent}}" @endif min="0" max="100" name="ent">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ent}}" @endif min="0" max="100" name="ent" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-bed"></i>&nbsp;&nbsp;&nbsp;Dom.
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->dom}}" @endif min="0" max="100" name="dom">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->dom}}" @endif min="0" max="100" name="dom" required>
                     </div>
             
                     <div class="filter_div">
-                        <i class="fa fa-internet-explorer"></i>&nbsp;&nbsp;&nbsp;&nbsp;Int/Util (GhC)
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->intr}}" @endif min="0" name="intr">
+                        <i class="fa fa-money"></i>&nbsp;&nbsp;&nbsp;Cola
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->cola}}" @endif min="0" max="100" name="cola" required>
+                    </div>
+            
+                    <div class="filter_div">
+                        <i class="fa fa-internet-explorer"></i>&nbsp;&nbsp;&nbsp;Int/Ut (GhC)
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->intr}}" @endif min="0" name="intr" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-taxi"></i>&nbsp;&nbsp;&nbsp;T&T (GhC)
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->tnt}}" @endif min="0" name="tnt">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->tnt}}" @endif min="0" name="tnt" required>
                     </div>
+            
+                    @if (count($new_allows) > 0)
+                        <p class="small_p">&nbsp; New Allowances</p>
+                        @foreach ($new_allows as $new_alw)
+                            <div class="filter_div">
+                                <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;&nbsp;{{ substr($new_alw->allow_name, 0, 5) }}... @if ($new_alw->allow_amt!=0) (Ghc) @endif
+                                <input type="number" step="any" @if ($new_alw->allow_perc==0)value="{{$new_alw->allow_amt}}" @else value="{{$new_alw->allow_perc}}" @endif min="0" @if ($new_alw->allow_perc!=0) max="100" @endif name="{{'new'.$new_alw->id}}" required>
+                            </div>
+                        @endforeach
+                    @endif
+                    {{-- <div class="filter_div">
+                        <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;&nbsp;Cola 
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->cola}}" @endif min="0" max="100" name="tnt" required>
+                    </div> --}}
 
                     <p class="">&nbsp;</p>
             
                     <div class="filter_div">
                         <i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;&nbsp;SSF
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf}}" @endif min="0" max="100" name="ssf">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf}}" @endif min="0" max="100" name="ssf" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-credit-card"></i>&nbsp;&nbsp;&nbsp;&nbsp;SSF 1T
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf1}}" @endif min="0" max="100" name="ssf1">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf1}}" @endif min="0" max="100" name="ssf1" required>
                     </div>
             
                     <div class="filter_div">
                         <i class="fa fa-credit-card-alt"></i>&nbsp;&nbsp;&nbsp;SSF 2T
-                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf2}}" @endif min="0" max="100" name="ssf2">
+                        <input type="number" step="any" @if ($allowoverview!='')value="{{$allowoverview->ssf2}}" @endif min="0" max="100" name="ssf2" required>
                     </div>
                 
                     {{-- <div class="filter_div">

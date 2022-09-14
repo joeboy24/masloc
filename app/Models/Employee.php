@@ -10,7 +10,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','department_id','allowance_id','salarycat_id','salary_id','bank_id','staff_id',
+        'user_id','department_id','allowance_id','salarycat_id','salary_id','bank_id','loan_id','staff_id',
         'afis_no','fname','sname','oname','gender','dob','position','date_emp','cur_pos','ssn','salary',
         'contact','ssf','2tier_ssf','email','dept','region','bank','branch','acc_no','sub_div',
         'staff_loan','loan_date_started','loan_bal','loan_monthly_ded','photo','status','del'
@@ -56,9 +56,9 @@ class Employee extends Model
         return $this->belongsTo('App\Models\Bank');
     }
 
-    // public function loan(){
-    //     return $this->belongsTo('App\Models\Loan');
-    // }
+    public function loan(){
+        return $this->belongsTo('App\Models\Loan');
+    }
 
     public function region(){
         return $this->belongsTo('App\Models\Region');

@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -199,12 +199,12 @@
                                                     @endif</td>
                                                 <td class="text-bold-500">{{$lv->status}}</td>
                                             </tr>
-                                        @else
+                                        {{-- @else
                                             <tr>
                                                 <div class="alert alert-danger">
                                                     No records found on {{$lv->leave_type}} leaves
                                                 </div>
-                                            </tr>
+                                            </tr> --}}
                                         @endif
                                     @endforeach
                                 </tbody>

@@ -18,7 +18,10 @@ use App\Models\Bank;
 use App\Models\Loan;
 use App\Models\User;
 use App\Models\Leave;
+use App\Models\Region;
 use App\Models\LoanSetup;
+use App\Models\SalaryCat;
+use App\Models\AllowanceList;
 use Session;
 
 class GeneralController extends Controller
@@ -51,9 +54,14 @@ class GeneralController extends Controller
 
     public function pay_employee_view(){
         // $users = User::where('status', '!=', 'Student')->get();
+        $regions = Employee::select('region')->orderBy('region', 'ASC')->distinct('region')->get();
+        $position = SalaryCat::orderBy('position', 'ASC')->get();
         $employees = Employee::orderBy('fname', 'ASC')->paginate(20);
         $patch = [
             'c' => 1,
+            'regions' => $regions,
+            'main_regions' => Region::all(),
+            'position' => $position,
             'employees' => $employees
         ];
         return view('dash.pay_employee_view')->with($patch);
@@ -68,7 +76,9 @@ class GeneralController extends Controller
         $allowances = Allowance::orderBy('fname', 'ASC')->paginate(20);
         $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
         $patch = [
+            'new_name' => '',
             'allowances' => $allowances,
+            'new_allows' => AllowanceList::all(),
             'allowoverview' => $allowoverview
         ];
         return view('dash.pay_allowance')->with($patch);

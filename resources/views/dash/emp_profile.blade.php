@@ -28,7 +28,7 @@
                       <a href="/add_employee">Add Employee</a>
                   </li>
                   <li class="submenu-item">
-                      <a href="/pay_employee">Upload Data</a>
+                      <!--a href="/pay_employee">Upload Data</a-->
                   </li>
                   <li class="submenu-item active">
                       <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -150,7 +150,11 @@
                   <div class="row emp_profile">
 
                     <div class="col-md-4 offset-md-4 hhh">
-                      <img src="/maindir/images/user3.png" class="emp_profile_img" alt="">
+                      @if ($emp->photo != 'noimage.png')
+                        <img src="/storage/classified/emps/{{$emp->photo}}" class="emp_profile_img" alt="">
+                      @else
+                        <img src="/maindir/images/user3.png" class="emp_profile_img" alt="">
+                      @endif
                     </div>
 
                     {{-- <div class="col-md-5 non_edit">
@@ -170,7 +174,7 @@
                           </tr>
                           <tr>
                             <td class="faint_td">Position</td>
-                            <td>: &nbsp; {{ $emp->position }}</td>
+                            <td>: &nbsp; {{ $emp->cur_pos }}</td>
                           </tr>
                           <tr>
                             <td class="faint_td">Department</td>
@@ -243,11 +247,19 @@
                             </tr>
                             <tr>
                               <td class="faint_td">Position</td>
-                              <td>: &nbsp; {{ $emp->position }}</td>
+                              <td>: &nbsp; {{ $emp->cur_pos }}</td>
+                            </tr>
+                            <tr>
+                              <td class="faint_td">Date Employed&nbsp;</td>
+                              <td>: &nbsp; {{ date('F d, Y', strtotime($emp->date_emp)) }}</td>
                             </tr>
                             <tr>
                               <td class="faint_td">Department</td>
                               <td>: &nbsp; {{ $emp->dept }}</td>
+                            </tr>
+                            <tr>
+                              <td class="faint_td">Basic Sal.</td>
+                              <td>: &nbsp; {{ number_format($emp->salary, 2) }}</td>
                             </tr>
                             <tr>
                               <td class="faint_td">Region</td>
@@ -326,7 +338,7 @@
                           </tr>
                           <tr>
                             <td class="faint_td2">Date of Birth</td>
-                            <td>: &nbsp; Null</td>
+                            <td>: &nbsp; {{date('F d, Y', strtotime($emp->dob))}}</td>
                           </tr>
                           <tr>
                             <td class="faint_td2">Gender</td>

@@ -25,8 +25,15 @@ class CreateAllowancesTable extends Migration
             $table->string('vma')->default('no');
             $table->string('ent')->default('no');
             $table->string('dom')->default('no');
+            $table->string('cola')->default('no');
             $table->string('intr')->default('no');
             $table->string('tnt')->default('no');
+
+            $table->string('new1')->default('no');
+            $table->string('new2')->default('no');
+            $table->string('new3')->default('no');
+            $table->string('new4')->default('no');
+            $table->string('new5')->default('no');
             $table->string('del')->default('no');
             $table->timestamps();
         });

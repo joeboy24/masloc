@@ -18,6 +18,7 @@ class CreateAllowanceListsTable extends Migration
             $table->string('user_id')->nullable();
             $table->string('allow_name');
             $table->string('allow_perc');
+            $table->string('allow_amt')->default(0);
             $table->string('del')->default('no');
             $table->string('status')->default('active');
             $table->timestamps();

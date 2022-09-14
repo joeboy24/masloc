@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -102,7 +102,7 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -132,9 +132,14 @@
 
     <div class="page-heading">
         <h3><i class="fa fa-file-text color6"></i>&nbsp;&nbsp;Staff Loans</h3>
-        <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i>&nbsp; Print Emp. Report</p></a>&nbsp;
-        <a data-bs-toggle="modal" data-bs-target="#loan_setup"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Loan Setup</p></a>
-        <a href="#"><button type="submit" class="print_btn_small"><i class="fa fa-refresh"></i></button></a>
+        <form action="{{ action('EmployeeController@store') }}" method="POST">
+            @csrf
+            <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
+            <a data-bs-toggle="modal" data-bs-target="#loan_setup"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Loan Setup</p></a>
+            {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a>
+            <a href="/taxexport"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Download Excel</p></a> --}}
+            <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button>
+        </form>
     </div>
 
     {{ $employees->links() }}
@@ -172,7 +177,7 @@
                                         @endif
                                             <td class="text-bold-500">{{$c++}}</td>
                                             <td class="text-bold-500">{{ $emp->fname.' '.$emp->sname.' '.$emp->oname }}
-                                                <p class="small_p">Position: {{ $emp->position }}</p>
+                                                <p class="small_p">Position: {{ $emp->cur_pos }}</p>
                                             </td>
                                             <td class="text-bold-500">Bal.: {{ number_format($emp->loan_bal, 2) }}
                                                 @for ($i = 0; $i < count($loans); $i++)
@@ -196,6 +201,9 @@
                                                         </button>
                                                     @else
                                                         <button type="button" class="my_trash2 yellow_bg"><i class="fa fa-times"></i>&nbsp; Not Qualified</button>
+                                                        <button type="button" data-bs-toggle="modal" data-bs-target="#special_loan_setup" class="my_trash2 bg3 color8 genhover">
+                                                            <i class="fa fa-warning"></i>
+                                                        </button>
                                                         <button type="submit" name="update_action" value="del_loan" class="my_trash2 bg6 color8 genhover" onclick="return confirm('Note: This action will permanently clear loan status')">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
@@ -216,6 +224,39 @@
 
                                         </tr>
 
+                                        <!-- Special Loan Setup Modal -->
+                                        <div class="modal fade" id="special_loan_setup" tabindex="-1" role="dialog" aria-labelledby="modalRequestLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalRequestLabel">Special Case Loan</h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ action('EmployeeController@store') }}" method="POST">
+                                                        @csrf
+
+                                                        <div class="filter_div">
+                                                            <i class="fa fa-edit"></i>&nbsp;&nbsp; Loan Amount
+                                                            <input type="text" value="{{number_format($emp->loan->bal/2, 2)}}" step="any" min="0" placeholder="Enter Amount eg. 1200" name="interest" required>
+                                                        </div>
+
+                                                        <div class="filter_div">
+                                                            <i class="fa fa-calendar"></i>&nbsp;&nbsp; Duration (mth)
+                                                            <input type="number" @if ($loanset!='') value="{{$loanset->dur/2}}" @endif step="any" min="0" max="12" placeholder="Duration(months) eg. 7" name="dur" required>
+                                                        </div>
+                                                        
+                                                        <div class="form-group modal_footer">
+                                                            <button type="submit" name="store_action" value="loan_setup" class="load_btn"><i class="fa fa-save"></i>&nbsp; Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                
+                                            </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Edit Employee -->
                                         <div class="modal fade" id="edit{{$emp->id}}" tabindex="-1" role="dialog"
                                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable"
@@ -364,7 +405,7 @@
         </div>
     </div>
 
-    <!-- Filter Modal -->
+    <!-- Loan Modal -->
     <div class="modal fade" id="loan_setup" tabindex="-1" role="dialog" aria-labelledby="modalRequestLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -377,12 +418,12 @@
                     @csrf
 
                     <div class="filter_div">
-                        <i class="fa fa-edit"></i>&nbsp;&nbsp; Interest
+                        <i class="fa fa-edit"></i>&nbsp;&nbsp; Interest (%)
                         <input type="number" @if ($loanset!='') value="{{$loanset->interest}}" @endif step="any" min="0" max="100" placeholder="Interest(%) eg. 4" name="interest">
                     </div>
 
                     <div class="filter_div">
-                        <i class="fa fa-calendar"></i>&nbsp;&nbsp; Duration
+                        <i class="fa fa-calendar"></i>&nbsp;&nbsp; Duration (mth)
                         <input type="number" @if ($loanset!='') value="{{$loanset->dur}}" @endif step="any" min="0" max="100" placeholder="Duration(months) eg. 30" name="dur">
                     </div>
                     

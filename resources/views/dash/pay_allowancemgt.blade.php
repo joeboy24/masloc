@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="submenu active">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -154,12 +154,21 @@
                     
                             <div class="filter_div" id="newtitle">
                                 <i class="fa fa-align-center"></i> &nbsp; Title
-                                <input type="text" name="allow_name" placeholder="Type Allowance Title Here">
+                                <input type="text" name="allow_name" placeholder="Type Allowance Title Here" required>
+                            </div>
+
+                            <div class="filter_div" id="newtitle">
+                                <i class="fa fa-tasks"></i> &nbsp; Select
+                                <select name="sel_perc" id="report_id">
+                                    <option value="0">Percentage / Amount</option>
+                                    <option value="1">Percentage</option>
+                                    <option value="2">Amount</option>
+                                </select>
                             </div>
                     
                             <div class="filter_div" id="newtitle">
-                                <i class="fa fa-pie-chart"></i> &nbsp; Percentage
-                                <input type="text" name="allow_perc" placeholder="Type Percentage Here">
+                                <i class="fa fa-pie-chart"></i> &nbsp; Figure
+                                <input type="number" step="any" min="0" name="allow_perc" placeholder="Type Figure Here" required>
                             </div>
 
                             <div class="form-group modal_footer">
@@ -190,7 +199,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Allowance Title</th>
-                                            <th>Percentage</th>
+                                            <th>Percentage / Amt</th>
                                             <th class="align_right">Action</th>
                                         </tr>
                                     </thead>   
@@ -204,7 +213,13 @@
                                             @endif
                                                 <td class="text-bold-500">{{$c++}}</td>
                                                 <td class="text-bold-500">{{ $allow->allow_name }}</td>
-                                                <td class="text-bold-500">{{ $allow->allow_perc }}</td>
+                                                <td class="text-bold-500">
+                                                    @if ($allow->allow_perc == 0)
+                                                        {{ number_format($allow->allow_amt, 2) }}
+                                                    @else
+                                                        {{ $allow->allow_perc }}%
+                                                    @endif
+                                                 </td>
                                                 {{-- <td class="text-bold-500">@if ($lv->dob != '') {{date('D.. M, d Y', strtotime($lv->dob))}} @endif</td> --}}
                                                 <td class="text-bold-500 align_right">
 
@@ -220,7 +235,7 @@
                                                 </td>
                                             </tr>
 
-                                            <!-- Update Salary Category -->
+                                            <!-- Update Allowance -->
                                             <div class="modal fade" id="edit{{$allow->id}}" tabindex="-1" role="dialog"
                                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable"
@@ -252,17 +267,33 @@
                                                                     </div>
                                                                 </div>
                                                                 
-                                                                <div class="col-md-12">
-                                                                    <label>Percentage</label>
-                                                                    <div class="form-group has-icon-left">
-                                                                        <div class="position-relative">
-                                                                            <input name="allow_perc" type="text" class="form-control" placeholder="Percentage" id="first-name-icon" value="{{ $allow->allow_perc }}" required>
-                                                                            <div class="form-control-icon">
-                                                                                <i class="fa fa-pie-chart"></i>
+                                                                {{-- @if ($allow->allow_perc != 0) --}}
+                                                                    <div class="col-md-12">
+                                                                        <label>Percentage</label>
+                                                                        <div class="form-group has-icon-left">
+                                                                            <div class="position-relative">
+                                                                                <input name="allow_perc" type="text" class="form-control" placeholder="Percentage" id="first-name-icon" value="{{ $allow->allow_perc }}" required>
+                                                                                <div class="form-control-icon">
+                                                                                    <i class="fa fa-pie-chart"></i>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                {{-- @endif --}}
+                                                                
+                                                                {{-- @if ($allow->allow_amt != 0) --}}
+                                                                    <div class="col-md-12">
+                                                                        <label>Amount</label>
+                                                                        <div class="form-group has-icon-left">
+                                                                            <div class="position-relative">
+                                                                                <input name="allow_amt" type="text" class="form-control" placeholder="Amount" id="first-name-icon" value="{{ $allow->allow_amt }}" required>
+                                                                                <div class="form-control-icon">
+                                                                                    <i class="fa fa-money"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {{-- @endif --}}
                                                                 
                                                             </div> 
                                                             <div class="modal-footer">

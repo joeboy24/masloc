@@ -719,7 +719,7 @@
                   <div class="text text-center">
                     <p class="mb-5">{{ $testimony->text }}</p>
                     <p class="name">{{ $testimony->name }}</p>
-                    <span class="position">{{ $testimony->position }}</span>
+                    <span class="position">{{ $testimony->cur_pos }}</span>
                   </div>
                 </div>
               </div>

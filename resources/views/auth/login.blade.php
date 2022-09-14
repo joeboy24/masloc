@@ -3,7 +3,7 @@
 
 @section('header_text')
   <div class="header_top_col">
-    <p class="logo_text1"><i class="fa fa-grav" style="font-size:1.4em"></i>&nbsp; PIVO<b class="logo_text2">APPS</b></p>
+    <p class="logo_text1"><i class="fa fa-unlock-alt" style="font-size:1.4em"></i>&nbsp; MASLOC<b class="logo_text2"></b></p>
   </div>
 @endsection
 
@@ -19,11 +19,16 @@
         {{-- <div class="col-md-6"> --}}
 
           <div class="lock_container">
-            <p><i class="fa fa-unlock-alt"></i></p>
+            {{-- <p><i class="fa fa-unlock-alt"></i></p> --}}
+            <img class="logo_top" src="/maindir/images/masloc.png" alt="">
           </div>
 
           <section class="login_content">
             {{-- <div style="height: 50px"></div> --}}
+            {{-- <div class="logos_div">
+              <img class="logo_img1" src="/maindir/images/masloc.png" alt="">
+              <img class="logo_img2" src="/maindir/images/coat2.png" alt="">
+            </div> --}}
             <form action="{{ route('login') }}" method="POST">
               @csrf
               <input placeholder="Phone / Email" id="email" type="text" class="@error('email') is-invalid @enderror login_input" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>

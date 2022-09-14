@@ -10,7 +10,7 @@ class AllowanceList extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','allow_name','allow_perc'
+        'user_id','allow_name','allow_perc','allow_amt'
     ];
 
     public function employee(){

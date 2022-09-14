@@ -36,6 +36,9 @@
                     <li class="submenu-item">
                         <a href="/allowance">Allowance</a>
                     </li>
+                    {{-- <li class="submenu-item ">
+                        <a href="#">Accounts</a>
+                    </li> --}}
                 </ul>
             </li>
 
@@ -74,7 +77,7 @@
                 </a>
             </li>
 
-            <li class="sidebar-item active">
+            <li class="sidebar-item">
                 <a href="/birthdays" class='sidebar-link'>
                     <i class="fa fa-gift"></i>
                     <span>Birthdays</span><b class="menu_figure green_bg">{{session('bday_count')}}</b>
@@ -95,13 +98,13 @@
                 </a>
             </li>
 
-            <li class="sidebar-item has-sub">
+            <li class="sidebar-item active has-sub">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-cogs"></i>
                     <span>Settings</span>
                 </a>
-                <ul class="submenu">
-                    <li class="submenu-item">
+                <ul class="submenu active">
+                    <li class="submenu-item active">
                         <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
@@ -129,81 +132,77 @@
 
 @section('content')
 
+
     <div class="page-heading">
-        <h3><i class="fa fa-gift color1"></i>&nbsp;&nbsp;Birthdays</h3>
-        <form action="{{ action('EmployeeController@store') }}" method="POST">
-            @csrf
-            <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
-            {{-- <a data-bs-toggle="modal" data-bs-target="#leave_setup"><p class="view_daily_report">&nbsp;<i class="fa fa-gears color5"></i>&nbsp; Leave Setup</p></a>
-            <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button> --}}
-            <p>&nbsp;</p>
-        </form>
+        <h3><i class="fa fa-bank color6"></i>&nbsp;&nbsp;Company Setup</h3>
+        {{-- <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i>&nbsp; Print Emp. Report</p></a>
+        <a href="#"><button type="submit" class="print_btn_small"><i class="fa fa-refresh"></i></button></a> --}}
     </div>
 
-    {{ $bdays->links() }}
-
     <div class="row">
-        <div class="col-12 col-xl-12">
+        <div class="col-12 col-xl-10">
             @include('inc.messages') 
             <div class="card">
                 <div class="card-body">
 
-                    <!-- Birthday View -->
-                    <div class="table-responsive">
-                        @if (count($bdays) > 0)
-                            <table class="table mb-0 table-lg">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th>Day</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>   
-                                <tbody>
-                                    @foreach ($bdays as $lv)
-                                        
-                                        @if ($c % 2 == 1)
-                                            <tr class="bg9">
-                                        @else
-                                            <tr>
-                                        @endif
-                                            <td class="bday_icon"><i class="fa fa-gift"></i></td>
-                                            <td class="text-bold-500">{{ $lv->fname.' '.$lv->sname.' '.$lv->oname }}</td>
-                                            <td class="text-bold-500">@if ($lv->dob != '') {{date('D.. M, d Y', strtotime($lv->dob))}} @endif</td>
-                                            <td class="text-bold-500">
+                    <p>&nbsp;</p>
+                    <form class="form form-horizontal" action="{{action('DashController@store')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-md-10 offset-md-1">
 
-                                                <form action="{{ action('HrdashController@update', $lv->id) }}" method="POST">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_method" value="PUT">
-                                                    @csrf
-        
-        
-                                                    {{-- @if ($lv->status == 'inactive') --}}
-                                                        {{-- <td class="text-bold-500 align_right action_size">
-                                                            <button type="submit" name="update_action" value="restore_employee" class="my_trash" onclick="return confirm('Do you want to restore this record?')"><i class="fa fa-reply"></i></button>
-                                                        </td> --}}
-                                                    {{-- @else --}}
-                                                        {{-- <td class="text-bold-500 align_right action_size"> --}}
-                                                        <button type="submit" name="update_action" value="send_wish" class="my_trash2 bg10 color8 genhover" onclick="return confirm('Do you wish to proceed to send birthday message?')"><i class="fa fa-clipboard"></i> &nbsp;Send Wish</button>
-                                                        {{-- </td> --}}
-                                                    {{-- @endif --}}
-                                                </form>
+                            <!-- Add Employee -->
 
-                                            </td>
-                                            {{-- <td class="text-bold-500">{{$lv->status}}</td> --}}
-                                        </tr>
-
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            {{ $bdays->links() }}
-                        @else
-                            <div class="alert alert-danger">
-                                No Records Found on Birthdays
+                            <div class="filter_div" id="">
+                                <i class="fa fa-bank"></i> &nbsp; Company Name
+                                <input name="name" type="text" class="form-control" placeholder="Name" id="first-name-icon" @if ($company) value="{{$company->name}}" @endif required>
                             </div>
-                        @endif
-                    </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-road"></i> &nbsp; Location
+                                <input name="loc" type="text" class="form-control" placeholder="City" id="first-name-icon" @if ($company) value="{{$company->location}}" @endif required>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label>Address</label>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <div class="form-group with-title mb-3">
+                                            <textarea name="company_add" class="form-control" rows="3" required>@if ($company) {{$company->comp_add}}@endif</textarea>
+                                            {{-- <textarea name="company_add" class="form-control" rows="3" placeholder="Address" required></textarea> --}}
+                                            <label>Provide Address in Full</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-phone"></i> &nbsp; Contact
+                                <input name="contact" type="text" class="form-control" placeholder="Mobile" @if ($company) value="{{$company->contact}}" @endif required>
+                            </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-envelope"></i> &nbsp; Email
+                                <input name="email" type="email" class="form-control" placeholder="Email" id="first-name-icon" @if ($company) value="{{$company->email}}" @endif required>
+                            </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-photo"></i> &nbsp; Logo
+                                <input name="company_logo" type="file" class="form-control" id="inputGroupFile01" @if ($company) value="{{$company->logo}}" @endif>
+                            </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-globe"></i> &nbsp; Website
+                                <input name="company_web" type="text" class="form-control" placeholder="Website" id="first-name-icon" @if ($company) value="{{$company->website}}" @endif>
+                            </div>
+
+                            <div class="form-group modal_footer">
+                                <button type="submit" class="load_btn" name="store_action" value="admi_config"><i class="fa fa-save"></i>&nbsp; Update</button>
+                            </div>
+
+                        </div>
+                    </form>
 
                 </div>
             </div>

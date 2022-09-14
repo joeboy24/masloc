@@ -28,7 +28,7 @@
                         <a href="/add_employee">Add Employee</a>
                     </li>
                     <li class="submenu-item">
-                        <a href="/pay_employee">Upload Data</a>
+                        <!--a href="/pay_employee">Upload Data</a-->
                     </li>
                     <li class="submenu-item">
                         <a href="/view_employee">View/Edit Data</a>
@@ -105,7 +105,7 @@
                 </a>
                 <ul class="submenu active">
                     <li class="submenu-item">
-                        <a href="/compsetup">Company Setup</a>
+                        <a href="/companysetup">Company Setup</a>
                     </li>
                     <li class="submenu-item">
                         <a href="/adduser">Manage User</a>
@@ -174,7 +174,7 @@
                                     <option value="0" selected>Choose Position</option>
                                     <option value="na">Not Available</option>
                                     @foreach ($possalarycat as $pt)
-                                        <option>{{$pt->position}}</option>
+                                        <option>{{$pt->cur_pos}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -260,7 +260,7 @@
                                             @endif
                                                 <td class="text-bold-500">{{$c++}}</td>
                                                 <td class="text-bold-500">{{ $scat->title }}</td>
-                                                <td class="text-bold-500">{{$scat->position}}</td>
+                                                <td class="text-bold-500">{{$scat->cur_pos}}</td>
                                                 <td class="text-bold-500">{{ number_format($scat->basic_sal, 2) }}</td>
                                                 {{-- <td class="text-bold-500">@if ($lv->dob != '') {{date('D.. M, d Y', strtotime($lv->dob))}} @endif</td> --}}
                                                 <td class="text-bold-500 align_right">
@@ -301,7 +301,7 @@
                                                                     <label>Title</label>
                                                                     <div class="form-group has-icon-left">
                                                                         <div class="position-relative">
-                                                                            <input name="title" type="text" class="form-control" placeholder="Title" id="first-name-icon" value="{{ $scat->title }}" required>
+                                                                            <input name="title" type="text" class="form-control" placeholder="Title" id="first-name-icon" value="{{ $scat->title }}" readonly>
                                                                             <div class="form-control-icon">
                                                                                 <i class="fa fa-th-large"></i>
                                                                             </div>
@@ -313,7 +313,7 @@
                                                                     <label>Position</label>
                                                                     <div class="form-group has-icon-left">
                                                                         <div class="position-relative">
-                                                                            <input name="position" type="text" class="form-control" placeholder="Position" id="first-name-icon" value="{{ $scat->position }}" required>
+                                                                            <input name="position" type="text" class="form-control" placeholder="Position" id="first-name-icon" value="{{ $scat->position }}" readonly>
                                                                             <div class="form-control-icon">
                                                                                 <i class="fa fa-dot-circle-o"></i>
                                                                             </div>
