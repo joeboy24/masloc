@@ -88,12 +88,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item has-sub">
                 <a href="#" class='sidebar-link'>
@@ -196,7 +196,7 @@
                                                 <p class="small_p">Dept.: {{ $emp->dept }}</p>
                                             </td>
                                             <td class="text-bold-500">{{ number_format($emp->salary, 2) }}<br>
-                                                <a href="/reporting/{{$emp->id}}"><button type="button" value="del_loan" class="my_trash2 green_bg color8 genhover"><i class="fa fa-print"></i>&nbsp; Pay Slip</button></a>
+                                                <a href="/reporting/{{$emp->id}}"><button type="button" class="my_trash2 green_bg color8 genhover"><i class="fa fa-print"></i>&nbsp; Pay Slip</button></a>
                                             </td>
                                             {{-- <td class="text-bold-500">{{ $emp->contact }}</td> --}}
                                             <td class="text-bold-500">{{ $emp->status }}

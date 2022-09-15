@@ -88,12 +88,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item has-sub">
                 <a href="#" class='sidebar-link'>
@@ -169,7 +169,7 @@
                                             <tr>
                                         @endif
                                             <td class="bday_icon"><i class="fa fa-gift"></i></td>
-                                            <td class="text-bold-500">{{ $lv->fname.' '.$lv->sname.' '.$lv->oname }}</td>
+                                            <td class="text-bold-500">{{ $lv->fname.' '.$lv->sname.' '.$lv->oname }}<br><p class="small_p">{{$lv->contact}}</p></td>
                                             <td class="text-bold-500">@if ($lv->dob != '') {{date('D.. M, d Y', strtotime($lv->dob))}} @endif</td>
                                             <td class="text-bold-500">
 
@@ -185,7 +185,7 @@
                                                         </td> --}}
                                                     {{-- @else --}}
                                                         {{-- <td class="text-bold-500 align_right action_size"> --}}
-                                                        <button type="submit" name="update_action" value="send_wish" class="my_trash2 bg10 color8 genhover" onclick="return confirm('Do you wish to proceed to send birthday message?')"><i class="fa fa-clipboard"></i> &nbsp;Send Wish</button>
+                                                        <button type="button" name="update_action" value="send_wish" class="my_trash2 bg10 color8 genhover" onclick="return confirm('Do you wish to proceed to send birthday message?')"><i class="fa fa-clipboard"></i> &nbsp;Send Wish</button>
                                                         {{-- </td> --}}
                                                     {{-- @endif --}}
                                                 </form>

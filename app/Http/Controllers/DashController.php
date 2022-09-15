@@ -180,6 +180,7 @@ class DashController extends Controller
 
     
                     $name = $request->input('name');
+                    $abrv = $request->input('abrv');
                     $loc = $request->input('loc');
                     // $matchThese = ['name' => $name, 'location' => $loc, 'del' => 'no'];
 
@@ -233,6 +234,7 @@ class DashController extends Controller
                             // $company = Company::find(1);
                             $company->user_id = auth()->user()->id;
                             $company->name = $name;
+                            $company->abrv = $abrv;
                             $company->comp_add = $request->input('company_add');
     
                             $company->location = $loc;
@@ -279,6 +281,7 @@ class DashController extends Controller
                             $company = new Company;
                             $company->user_id = auth()->user()->id;
                             $company->name = $name;
+                            $company->abrv = $abrv;
                             $company->comp_add = $request->input('company_add');
     
                             $company->location = $loc;

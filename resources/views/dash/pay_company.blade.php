@@ -91,12 +91,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item active has-sub">
                 <a href="#" class='sidebar-link'>
@@ -153,8 +153,13 @@
                             <!-- Add Employee -->
 
                             <div class="filter_div" id="">
-                                <i class="fa fa-bank"></i> &nbsp; Company Name
-                                <input name="name" type="text" class="form-control" placeholder="Name" id="first-name-icon" @if ($company) value="{{$company->name}}" @endif required>
+                                <i class="fa fa-bank"></i> &nbsp; Company Fullame
+                                <input name="name" type="text" class="form-control" placeholder="Fullname" id="first-name-icon" @if ($company) value="{{$company->name}}" @endif required>
+                            </div>
+
+                            <div class="filter_div" id="">
+                                <i class="fa fa-bank"></i> &nbsp; Short Name
+                                <input name="abrv" type="text" class="form-control" placeholder="Abreviation" id="first-name-icon" @if ($company) value="{{$company->abrv}}" @endif required>
                             </div>
 
                             <div class="filter_div" id="">

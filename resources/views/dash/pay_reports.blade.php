@@ -88,12 +88,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item has-sub">
                 <a href="#" class='sidebar-link'>
@@ -155,6 +155,7 @@
                         <option value="emp">Employees Reports</option>
                         <option value="tax">Taxation Reports</option>
                         <option value="sal">Salaries Reports</option>
+                        <option value="tax">Leave Reports</option>
                         <option value="bksum">Bank Summary</option>
                       </select>
                     </div>

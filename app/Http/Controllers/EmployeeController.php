@@ -1173,6 +1173,31 @@ class EmployeeController extends Controller
                 } else {
                     $cola = 'no';
                 }
+                if ($request->input('allow1')) {
+                    $new1 = 'yes';
+                } else {
+                    $new1 = 'no';
+                }
+                if ($request->input('allow2')) {
+                    $new2 = 'yes';
+                } else {
+                    $new2 = 'no';
+                }
+                if ($request->input('allow3')) {
+                    $new3 = 'yes';
+                } else {
+                    $new3 = 'no';
+                }
+                if ($request->input('allow4')) {
+                    $new4 = 'yes';
+                } else {
+                    $new4 = 'no';
+                }
+                if ($request->input('allow5')) {
+                    $new5 = 'yes';
+                } else {
+                    $new5 = 'no';
+                }
 
 
 
@@ -1295,6 +1320,12 @@ class EmployeeController extends Controller
                                 'dom' => $dom,
                                 'intr' => $intr,
                                 'tnt' => $tnt,
+                                'cola' => $cola,
+                                'new1' => $new1,
+                                'new2' => $new2,
+                                'new3' => $new3,
+                                'new4' => $new4,
+                                'new5' => $new5,
                             ]);
 
                             $loan_insert = Loan::firstOrCreate([
@@ -1396,6 +1427,11 @@ class EmployeeController extends Controller
             break;
 
             case 'grant_loan':
+
+                $loanset = LoanSetup::all()->count();
+                if ($loanset < 1) {
+                    return redirect(url()->previous())->with('warning', 'Warning..! Set up loan interest & duration at `Loan Setup` to proceed');
+                }
                 // return 'Grant Loan';
                 // 841.99804131162
 

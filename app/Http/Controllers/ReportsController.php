@@ -201,7 +201,8 @@ class ReportsController extends Controller
     {
         //
         $send = [
-            'report_type' => 'pay_slip'
+            'report_type' => 'pay_slip',
+            'payslip' => Salary::where('employee_id', $id)->latest()->first()
         ];
         return view('dash.pay_slip')->with($send);
     }

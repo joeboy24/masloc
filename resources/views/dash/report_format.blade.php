@@ -919,10 +919,11 @@
 
                                             <tr>
                                                 <td class="col-sm-1 pl"></td>
-                                                <td class="col-sm-3 pl"><h4>{{$banks[$i-1]->bank_fullname}} Total</h4></td>
+                                                <td class="col-sm-3 pl"><h4><b>{{$banks[$i-1]->employee->bank}} Total</b></h4></td>
                                                 <td class="col-sm-1 pl"></td>
                                                 <td class="col-sm-1 pl"></td>
-                                                <td class="col-sm-1 pl">{{number_format($sum, 2)}}</td>
+                                                <td class="col-sm-1 pl"></td>
+                                                <td class="col-sm-1 pr"><h4><b>{{number_format($sum, 2)}}</b></h4></td>
                                             </tr>
                                             <input type="hidden" value="{{$c = 1}}">
                                         </tbody>

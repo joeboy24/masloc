@@ -443,31 +443,31 @@
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Employee&nbsp;Name:</td>
-                                    <td class="td_data">Patric Ola Yawson</td>
+                                    <td class="td_data">{{$payslip->employee->fname.' '.$payslip->employee->sname.' '.$payslip->employee->oname}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">AFIS NO:</td>
-                                    <td class="td_data">AF12345A09876DFG</td>
+                                    <td class="td_data">{{$payslip->employee->afis_no}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Region:</td>
-                                    <td class="td_data">Head Office</td>
+                                    <td class="td_data">{{$payslip->employee->region}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Department:</td>
-                                    <td class="td_data">IT & Management</td>
+                                    <td class="td_data">{{$payslip->employee->dept}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Position:</td>
-                                    <td class="td_data">Principal Technician</td>
+                                    <td class="td_data">{{$payslip->employee->cur_pos}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Bank:</td>
-                                    <td class="td_data">Ecobank Ghana LTD, Accra</td>
+                                    <td class="td_data">{{$payslip->employee->bank}}</td>
                                 </tr>
                                 <tr>
                                     <td class="td_heading">Account No.:</td>
-                                    <td class="td_data">001236783776582</td>
+                                    <td class="td_data">{{$payslip->employee->acc_no}}</td>
                                 </tr>
                             </tbody>
                         </table>

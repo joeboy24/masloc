@@ -36,6 +36,7 @@ class DashpagesController extends Controller
     }
 
     public function pay_loan(){
+
         // $users = User::where('status', '!=', 'Student')->get();
         $loan_setup = LoanSetup::where('del', 'no')->latest()->first();
         $employees = Employee::orderBy('fname', 'ASC')->paginate(20);
@@ -49,10 +50,11 @@ class DashpagesController extends Controller
     }
 
     public function pay_tax(){
+        
         $taxation = Taxation::where('month', date('m-Y'))->paginate(50);
         $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
         if ($allowoverview == '') {
-            return redirect(url()->previous())->with('error', 'Oops..! Define Allowance Percentages to proceed @ -> Employee -> Allowances -> Allowance/SSNIT Overview');
+            return redirect(url()->previous())->with('warning', 'Oops..! Define Allowance Percentages to proceed -> Employee / Allowances / Allowance/SSNIT Overview');
         }
         $patch = [
             'c' => 1,
@@ -85,7 +87,7 @@ class DashpagesController extends Controller
         $salaries = Salary::where('month', date('m-Y'))->paginate(50);
         $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
         if ($allowoverview == '') {
-            return redirect(url()->previous())->with('error', 'Oops..! Define Allowance Percentages to proceed @ -> Employee -> Allowances -> Allowance/SSNIT Overview');
+            return redirect(url()->previous())->with('warning', 'Oops..! Define Allowance Percentages to proceed -> Employee / Allowances / Allowance/SSNIT Overview');
         }
         $patch = [
             'c' => 1,
@@ -144,6 +146,12 @@ class DashpagesController extends Controller
     }
 
     public function pay_add_emp(){
+
+        $dept_count = Department::all()->count();
+        if ($dept_count<1) {
+            return redirect(url()->previous())->with('warning', 'Warning..! Add departments at settings to proceed');
+        }
+
         // $users = User::where('status', '!=', 'Student')->get();
         $department = Department::orderBy('dept_name', 'ASC')->get();
         // $department = Employee::select('dept')->orderBy('dept', 'ASC')->distinct('dept')->get();
@@ -222,6 +230,11 @@ class DashpagesController extends Controller
     }
 
     public function pay_allowance_mgt(){
+
+        $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+        if ($allowoverview == '') {
+            return redirect(url()->previous())->with('warning', 'Oops..! Define Allowance Percentages to proceed -> Employee / Allowances / Allowance/SSNIT Overview');
+        }
 
         $allow = AllowanceList::where('del', 'no')->orderBy('id', 'DESC')->paginate(20);
         $patch = [

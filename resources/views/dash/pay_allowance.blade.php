@@ -91,12 +91,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item has-sub">
                 <a href="#" class='sidebar-link'>

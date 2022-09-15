@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Company;
+use Session;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -42,6 +44,10 @@ class LoginController extends Controller
 
     protected function credentials(Request $request)
     {
+        $count = Company::all()->count();
+        if ($count>0) {
+            Session::put('company', Company::find(1));
+        }
         if(is_numeric($request->input('email'))){
             return ['contact'=>$request->input('email'), 'password'=>$request->input('password')];
         }

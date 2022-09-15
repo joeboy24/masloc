@@ -33,7 +33,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="index.html"><img src="/dashdir/images/logo/logo1.png" alt="Logo" srcset=""></a>
+                            <a href="#"><img src="/maindir/images/coat2.png" alt="Logo" srcset="">{{session('company')->abrv}}<img src="/storage/classified/company/company_logo.png" alt="" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -43,7 +43,7 @@
                 
                 @yield('sidebar_menu')
 
-                <button class="sidebar-toggler btn x"><i class="fa fa-times"></i></button>
+                {{-- <button class="sidebar-toggler btn x"><i class="fa fa-times"></i></button> --}}
             </div>
         </div>
 

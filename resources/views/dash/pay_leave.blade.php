@@ -88,12 +88,12 @@
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            <!--li class="sidebar-item">
                 <a href="#" class='sidebar-link'>
                     <i class="fa fa-calendar"></i>
                     <span>Calendar</span>
                 </a>
-            </li>
+            </li-->
 
             <li class="sidebar-item has-sub">
                 <a href="#" class='sidebar-link'>
@@ -133,7 +133,7 @@
         <h3><i class="fa fa-clipboard color2"></i>&nbsp;&nbsp;Leave</h3>
         <form action="{{ action('EmployeeController@store') }}" method="POST">
             @csrf
-            <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
+            <a href="#"><p class="print_report">&nbsp;<i class="fa fa-leaf"></i>&nbsp; Leave Requests</p></a>
             {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a> --}}
             <a data-bs-toggle="modal" data-bs-target="#leave_setup"><p class="view_daily_report">&nbsp;<i class="fa fa-gears color5"></i>&nbsp; Leave Setup</p></a>
             {{-- <a data-bs-toggle="modal" data-bs-target="#add_leave"><p class="view_daily_report">&nbsp;<i class="fa fa-plus-circle color5"></i>&nbsp; Add Leave</p></a> --}}

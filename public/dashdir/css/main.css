@@ -114,8 +114,13 @@
     line-height: 20px;
 }
 
+.logo {
+    font-size: 0.5em;
+    text-transform: uppercase;
+}
+
 .logo img{
-    height: 25px!important;
+    height: 50px!important;
 }
 
 .footer_txt {
@@ -861,6 +866,10 @@
     text-align: right;
     position: absolute;
     right: 10px;
+}
+
+.menu_figure i {
+    color: #fff!important;
 }
 
 .green_bg {

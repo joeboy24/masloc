@@ -17,6 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->bigIncrements('id');
             $table->string('user_id');
             $table->string('name');
+            $table->string('abrv')->nullable();
             $table->string('comp_add');
             $table->string('location')->nullable();
             $table->string('contact');
