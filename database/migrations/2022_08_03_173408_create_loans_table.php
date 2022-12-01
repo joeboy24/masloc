@@ -22,7 +22,7 @@ class CreateLoansTable extends Migration
             $table->string('dur')->nullable(); 
             $table->string('interest')->nullable(); 
             $table->string('monthly_ded')->nullable();
-            $table->string('bal')->nullable();
+            $table->string('bal')->default(0);
             $table->string('date_started')->nullable();
             $table->string('months_left')->nullable();
             $table->string('amt_paid')->default(0);

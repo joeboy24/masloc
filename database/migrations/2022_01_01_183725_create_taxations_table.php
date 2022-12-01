@@ -15,25 +15,25 @@ class CreateTaxationsTable extends Migration
     {
         Schema::create('taxations', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('month');
-            $table->string('employee_id');
-            $table->string('position');
-            $table->string('salary');
-            $table->string('rent');
-            $table->string('prof');
-            $table->string('tot_income');
-            $table->string('ssf');
-            $table->string('taxable_inc');
-            $table->string('tax_pay');
-            $table->string('first1');
-            $table->string('next1');
-            $table->string('next2');
-            $table->string('next3');
-            $table->string('next4');
-            $table->string('next5');
-            $table->string('net_amount');
-            $table->string('del')->default('no');
+            $table->string('user_id', 50);
+            $table->string('month', 50);
+            $table->string('employee_id', 50);
+            $table->string('position', 50);
+            $table->string('salary', 50);
+            $table->string('rent', 50);
+            $table->string('prof', 50);
+            $table->string('tot_income', 50);
+            $table->string('ssf', 50);
+            $table->string('taxable_inc', 50);
+            $table->string('tax_pay', 50);
+            $table->string('first1', 50);
+            $table->string('next1', 50);
+            $table->string('next2', 50);
+            $table->string('next3', 50);
+            $table->string('next4', 50);
+            $table->string('next5', 50);
+            $table->string('net_amount', 50);
+            $table->string('del', 50)->default('no', 50);
             $table->timestamps();
         });
     }
@@ -45,6 +45,6 @@ class CreateTaxationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('taxations');
+        Schema::dropIfExists('taxations', 50);
     }
 }

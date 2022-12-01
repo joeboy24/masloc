@@ -200,9 +200,13 @@ class ReportsController extends Controller
     public function show($id)
     {
         //
+        $payslip = Salary::where('employee_id', $id)->latest()->first();
+        if ($payslip) {}else{
+            return redirect(url()->previous())->with('error', 'Oops..! '.date('F').' salary records not yet generated. Click on refresh to recalculate and generate');
+        }
         $send = [
             'report_type' => 'pay_slip',
-            'payslip' => Salary::where('employee_id', $id)->latest()->first()
+            'payslip' => $payslip
         ];
         return view('dash.pay_slip')->with($send);
     }

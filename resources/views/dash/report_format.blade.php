@@ -651,6 +651,7 @@
                                                     <p>{{$allowoverview->vma.' % VMA: '}} <span class="chrg_span"><b>{{number_format($sal->vma, 2)}}</b></span></p>
                                                     <p>{{$allowoverview->ent.' % Ent.: '}} <span class="chrg_span"><b>{{number_format($sal->ent, 2)}}</b></span></p>
                                                     <p>{{$allowoverview->dom.' % Dom.: '}} <span class="chrg_span"><b>{{number_format($sal->dom, 2)}}</b></span></p>
+                                                    <p>{{$allowoverview->cola.' % COLA: '}} <span class="chrg_span"><b>{{number_format($sal->cola, 2)}}</b></span></p>
                                                     <p>Int/Others: <span class="chrg_span"><b>{{number_format($sal->intr, 2)}}</b></span></p>
                                                     <p>T&T: <span class="chrg_span"><b>{{number_format($sal->tnt, 2)}}</b></span></p>
                                                 </td>

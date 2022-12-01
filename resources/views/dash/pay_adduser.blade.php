@@ -208,7 +208,7 @@
 
                     <p>&nbsp;</p>
                     <div class="col-md-10 offset-md-1">
-                        <!-- Leaves View -->
+                        <!-- Users View -->
                         <div class="table-responsive">
                             @if (count($users) > 0)
                                 <table class="table mb-0 table-lg">
@@ -337,7 +337,7 @@
                                 {{ $users->links() }}
                             @else
                                 <div class="alert alert-danger">
-                                    No Records Found on Department
+                                    No Records Found on Users
                                 </div>
                             @endif
                         </div>

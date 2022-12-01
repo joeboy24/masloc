@@ -22,7 +22,9 @@ use App\Models\LoanSetup;
 use App\Models\SalaryCat;
 use App\Models\Department;
 use App\Models\AllowanceList;
+use App\Models\Allowexp;
 use App\Models\User;
+use Session;
 
 class EmployeeController extends Controller
 {
@@ -31,34 +33,90 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-        // return sprintf('%.f', 1.0120000398707E+15);
+        // return sprintf('%.d', 1.9100000011024E+15);
         // $emps = Employee::all();
         // foreach ($emps as $emp) {
         //     $emp->cur_pos = $emp->position;
         //     $emp->save();
         // }
-        return redirect('/view_employee');
+        // return redirect('/view_employee');
+        // $posts = Employee::all();
+        // foreach ($posts as $pos) {
+        //     $pos->cur_pos = $pos->position;
+        //     $pos->save();
+        // }
+        // return "Yh";
+
+        // if (session('check') != 'employee') {}else{
+        //     $check = $request->input('check');
+        //     Session::put('check', $check);
+        //     $check = session('check');
+        // }
+
+        // if ($check == 'employee') {
+            
+            // Search Employee Data
+            $src = $request->input('search_emp');
+            $regions = Employee::select('region')->orderBy('region', 'ASC')->distinct('region')->get();
+            $position = SalaryCat::orderBy('position', 'ASC')->get();
+            $employees = Employee::where('fname', 'LIKE', '%'.$src.'%')->orwhere('sname', 'LIKE', '%'.$src.'%')->orwhere('oname', 'LIKE', '%'.$src.'%')->orwhere('staff_id', 'LIKE', '%'.$src.'%')->orwhere('contact', 'LIKE', '%'.$src.'%')->orwhere('position', 'LIKE', '%'.$src.'%')->paginate(20);
+            $patch = [
+                'c' => 1,
+                'regions' => $regions,
+                'main_regions' => Region::all(),
+                'position' => $position,
+                'employees' => $employees
+            ];
+            return view('dash.pay_employee_view')->with($patch);
+            
+
+        // } elseif ($check == 'allowance') {
+
+            // Search Allowance
+            $src = $request->input('search_alw');
+            $allowances = Allowance::where('fname', 'LIKE', '%'.$src.'%')->orderBy('fname', 'ASC')->paginate(20);
+            $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+            $patch = [
+                'new_name' => '',
+                'allowances' => $allowances,
+                'new_allows' => AllowanceList::all(),
+                'allowoverview' => $allowoverview
+            ];
+            return view('dash.pay_allowance')->with($patch);
+
+        // }
+
+        return redirect(url()->previous());
 
         // Salary share to Employee & Allowances
-        $emprs = EmployeeRead::where('del', 'no')->limit(5)->get();
+        $emprs = EmployeeRead::where('del', 'no')->get();
         // $emprs = EmployeeRead::All();
         // return $emprs;
         foreach ($emprs as $empr) {
+
+            if ($empr->staff_loan == '') {
+                $empr->staff_loan = 0;
+                $empr->save();
+            }
         
             $full = explode(' ', $empr->fullname);
             $fname = $full[0];
+            $oname = '';
             $sname = str_replace($full[0],"",$empr->fullname);
+            if ($empr->oname != 0 || $empr->oname != '') {
+                $oname = $empr->oname;
+            }
 
             $emp_insert = Employee::firstOrCreate([
                 'user_id' => auth()->user()->id,
                 'afis_no' => $empr->afis_no,
-                'fname' => $fname,
-                'sname' => $sname,
-                // 'oname' => $oname,
+                'fname' => $empr->fname,
+                'sname' => $empr->sname,
+                'oname' => $oname,
                 'position' => $empr->position,
+                'cur_pos' => $empr->position,
                 'ssn' => $empr->ssn,
                 'salary' => $empr->salary,
                 'dept' => $empr->dept,
@@ -111,15 +169,31 @@ class EmployeeController extends Controller
                 } else {
                     $dom = 'no';
                 }
-                if ($empr->intr != '' && $empr->intr != 0) {
-                    $intr = 'yes';
+                // if ($empr->intr != '' && $empr->intr != 0) {
+                //     $intr = 'yes';
+                // } else {
+                //     $intr = 'no';
+                // }
+                // if ($empr->tnt != '' && $empr->tnt != 0) {
+                //     $tnt = 'yes';
+                // } else {
+                //     $tnt = 'no';
+                // }
+                if ($empr->intr == '' || $empr->intr == 0) {
+                    $intr = 0;
                 } else {
-                    $intr = 'no';
+                    $intr = $empr->intr;
                 }
-                if ($empr->tnt != '' && $empr->tnt != 0) {
-                    $tnt = 'yes';
+                if ($empr->tnt == '' || $empr->tnt == 0) {
+                    $tnt = 0;
                 } else {
-                    $tnt = 'no';
+                    $tnt = $empr->tnt;
+                }
+                
+                if ($empr->cola != '' && $empr->cola != 0) {
+                    $cola = 'yes';
+                } else {
+                    $cola = 'no';
                 }
                 
                 $alw_insert = Allowance::firstOrCreate([
@@ -135,6 +209,7 @@ class EmployeeController extends Controller
                     'dom' => $dom,
                     'intr' => $intr,
                     'tnt' => $tnt,
+                    'cola' => $cola,
                 ]);
                 // Insert Allowance ID
                 // $all_ins = Employee::find($emp_insert->id);
@@ -154,25 +229,28 @@ class EmployeeController extends Controller
                 'user_id' => auth()->user()->id,
                 'employee_id' => $emp->id,
             ]);
+        }
 
-            // $leave_insert = Leave::firstOrCreate([
-            //     'user_id' => auth()->user()->id,
-            //     'employee_id' => $emp->id,
-            // ]);
+        // Remove 0's
+        foreach ($emps as $emp) {
+            if ($emp->oname == 0) {
+                $emp->oname = '';
+                $emp->save();
+            }
         }
         // return 'Loan & Leave Insert Done!';
 
         // Get Banks
         $banks = Employee::distinct('bank')->get();
-        foreach ($banks as $bank) {
+        foreach ($banks as $emp) {
             # code...
             $bank_insert = Bank::firstOrCreate([
                 'user_id' => auth()->user()->id,
-                'bank_abr' => $bank->bank,
-                'bank_fullname' => $bank->bank,
+                'bank_abr' => $emp->bank,
+                'bank_fullname' => $emp->bank,
             ]);
-            $bank->bank_id = $bank_insert->id;
-            $bank->save();
+            $emp->bank_id = $bank_insert->id;
+            $emp->save();
         }
 
         return 'Employee, Allowance, Loans & Banks Insert Done!';
@@ -202,15 +280,15 @@ class EmployeeController extends Controller
         }
         // Get Banks
         $banks = Employee::distinct('bank')->get();
-        foreach ($banks as $bank) {
+        foreach ($banks as $emp) {
             # code...
             $bank_insert = Bank::firstOrCreate([
                 'user_id' => auth()->user()->id,
-                'bank_abr' => $bank->bank,
-                'bank_fullname' => $bank->bank,
+                'bank_abr' => $emp->bank,
+                'bank_fullname' => $emp->bank,
             ]);
-            $bank->bank_id = $bank_insert->id;
-            $bank->save();
+            $emp->bank_id = $bank_insert->id;
+            $emp->save();
         }
         return 'Done';
 
@@ -226,7 +304,7 @@ class EmployeeController extends Controller
                 $tax_search->save();
             }
         }
-        return redirect(url()->previous())->with('Success', 'Mapping Successfull!');
+        return redirect(url()->previous())->with('success', 'Mapping Successfull!');
     }
 
     /**
@@ -428,6 +506,7 @@ class EmployeeController extends Controller
                     }
                 } catch (\Throwable $th) {
                     // throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
 
                 return redirect(url()->previous())->with('success', 'Allowances / SSNIT (%) Successfully Updated');
@@ -437,6 +516,10 @@ class EmployeeController extends Controller
 
             case 'calc_taxation':
                 // return 777;
+                $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+                if ($allowoverview == '') {
+                    return redirect(url()->previous())->with('warning', 'Oops..! Define Allowance Percentages to proceed -> Employee / Allowances / Allowance/SSNIT Overview');
+                }
                 $alo = AllowanceOverview::where('del', 'no')->latest()->first();
                 $rent = $alo->rent;
                 $prof = $alo->prof;
@@ -449,6 +532,14 @@ class EmployeeController extends Controller
 
                 if ($employees) {
                     foreach ($employees as $emp) {
+                        $alx = Allowexp::where('employee_id', $emp->id)->where('del', 'no')->latest()->first();
+                        if ($alx) {
+                            // return 'Yh';
+                            $alo = Allowexp::find($alx->id);
+                            $rent = $alo->rent;
+                            $prof = $alo->prof;
+                            $ssf = $alo->ssf;
+                        }
                         if ($emp->allowance->rent == 'no') {
                             $rent = 0;
                         }else {
@@ -463,6 +554,7 @@ class EmployeeController extends Controller
                         $send_rent = ($rent/100) * $emp->salary;
                         $send_prof = ($prof/100) * $emp->salary;
                         $send_ssf = ($ssf/100) * $emp->salary;
+                        // $total_income = $send_rent;
                         $total_income = $emp->salary + $send_rent + $send_prof;
                         $taxable_inc = $total_income - $send_ssf;
                         $first1 = 0;
@@ -473,42 +565,6 @@ class EmployeeController extends Controller
                         $next5 = 0;
                         $tax_pay = 0;
                         // return $send_prof;
-
-                        if ($emp->salary <= 319) {
-                            // $first1 = 0;
-                            // } elseif ($emp->salary > 319 && $emp->salary <= 419) {
-                            //     $first1 = 0;
-                            //     $next1 = 5;
-                            // } elseif ($emp->salary > 419 && $emp->salary <= 539) {
-                            //     $first1 = 0;
-                            //     $next1 = 5;
-                            //     $next2 = (10/100) * ($taxable_inc - 419);
-                            //     $tax_pay = $next2;
-                            //     // if ($next2 > 12) {
-                            //     //     $next2 = 12;
-                            //     // }
-                            // } elseif ($emp->salary > 539 && $emp->salary <= 3000) {
-                            //     $first1 = 0;
-                            //     $next1 = 5;
-                            //     $next2 = 12;
-                            //     $next3 = (17.5/100) * ($taxable_inc - 539);
-                            //     $tax_pay = $next1 + $next2 + $next3;
-                            // } elseif ($emp->salary > 3000 && $emp->salary <= 16461) {
-                            //     $first1 = 0;
-                            //     $next1 = 5;
-                            //     $next2 = 12;
-                            //     $next3 = (17.5/100) * ($taxable_inc - 539);
-                            //     $next4 = (25.5/100) * ($taxable_inc - 3000);
-                            //     $tax_pay = $next1 + $next2 + $next3 + $next4;
-                            // } elseif ($emp->salary > 16461 && $emp->salary <= 20000) {
-                            //     $first1 = 0;
-                            //     $next1 = 5;
-                            //     $next2 = 12;
-                            //     $next3 = (17.5/100) * ($taxable_inc - 539);
-                            //     $next4 = (25.5/100) * ($taxable_inc - 3000);
-                            //     $next5 = (30/100) * ($taxable_inc - 16461);
-                            //     $tax_pay = $next1 + $next2 + $next3 + $next4 + $next5;
-                        }
 
                         // Next 1 Calc
                         if (($taxable_inc - 319) > 100) {
@@ -604,16 +660,22 @@ class EmployeeController extends Controller
                             $dom = ($alo->dom/100) * $emp->salary;
                         }
                         // Get Intr Allow
-                        if ($emp->allowance->intr == 'no') {
+                        if ($emp->allowance->intr == 'no' || $emp->allowance->intr == 0) {
                             $intr = 0;
                         }else {
-                            $intr = $alo->intr;
+                            $intr = $emp->allowance->intr;
                         }
                         // Get T&T Allow
-                        if ($emp->allowance->tnt == 'no') {
+                        if ($emp->allowance->tnt == 'no' || $emp->allowance->tnt == 0) {
                             $tnt = 0;
                         }else {
-                            $tnt = $alo->tnt;
+                            $tnt = $emp->allowance->tnt;
+                        }
+                        // Get T&T Allow
+                        if ($emp->allowance->cola == 'no') {
+                            $cola = 0;
+                        }else {
+                            $cola = ($alo->cola/100) * $emp->salary;
                         }
                         // Get New1 Allow
                         if ($emp->allowance->new1 == 'no') {
@@ -671,7 +733,7 @@ class EmployeeController extends Controller
                             }
                         }
                         $back_pay = 0;
-                        $net_bef_ded = $net_aft_inc_tax + $resp + $risk + $vma + $ent + $dom + $intr + $tnt;
+                        $net_bef_ded = $net_aft_inc_tax + $resp + $risk + $vma + $ent + $dom + $intr + $tnt + $cola + $new1 + $new2 + $new3 + $new4 + $new5;
                         $staff_loan = $emp->staff_loan;
                         $net_aft_ded = $net_bef_ded - $staff_loan;
                         $ssf_emp_cont = ((18.5 - $ssf) / 100) * $emp->salary;
@@ -730,6 +792,7 @@ class EmployeeController extends Controller
                                 $sl->dom = $dom;
                                 $sl->intr = $intr;
                                 $sl->tnt = $tnt;
+                                $sl->cola = $cola;
                                 $sl->new1 = $new1;
                                 $sl->new2 = $new2;
                                 $sl->new3 = $new3;
@@ -817,6 +880,7 @@ class EmployeeController extends Controller
                             
                         } catch (\Throwable $th) {
                             throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                         }
                     }
                 }
@@ -827,145 +891,7 @@ class EmployeeController extends Controller
             break;
 
             case 'calc_salaries':
-                // // return 777;
-                // $alo = AllowanceOverview::where('del', 'no')->latest()->first();
-                
-                // $employees = Employee::where('del', 'no')->get();
-
-                // foreach ($employees as $emp) {
-                //     if ($emp->allowance->rent == 'no') {
-                //         $rent = 0;
-                //     }else {
-                //         $rent = $alo->rent;
-                //     }
-                //     if ($emp->allowance->prof == 'no') {
-                //         $prof = 0;
-                //     }else {
-                //         $prof = $alo->prof;
-                //     }
-                    
-                //     $send_rent = ($rent/100) * $emp->salary;
-                //     $send_prof = ($prof/100) * $emp->salary;
-                //     $send_ssf = ($ssf/100) * $emp->salary;
-                //     $total_income = $emp->salary + $send_rent + $send_prof;
-                //     $taxable_inc = $total_income - $send_ssf;
-
-                //     // 'user_id','month','employee_id','position','salary','rent','prof','tot_income','ssf','taxable_inc',
-                //     // 'tax_pay','first1','next1','next2','next3','next4','next5','net_amount'
-                //     $salary = $emp->salary;
-                //     $ssf = ($alo->ssf/100) * $salary;
-                //     $sal_aft_ssf = $salary - $ssf;
-                //     $rent = ($alo->rent/100) * $salary;
-                //     $prof = ($alo->prof/100) * $salary;
-                //     $taxable_inc = $sal_aft_ssf + $rent + $prof;
-                //     $income_tax = $emp->taxation->tax_pay;
-
-                //     $where = [
-                //         'month' => date('m-Y'),
-                //         'employee_id' => $emp->id
-                //     ];
-                //     $sal_check = Salary::where($where)->first();
-                    
-                //     try {
-                //         if ($sal_check) {
-                //             $sl = Salary::find($sal_check->id);
-                //             // $sl->user_id = $xyz;
-                //             // $sl->month = $xyz;
-                //             // $sl->employee_id = $xyz;
-                //             // $sl->cur_pos = $xyz;
-                //             $sl->salary = $salary;
-                //             $sl->ssf = $ssf;
-                //             $sl->sal_aft_ssf = $sal_aft_ssf;
-                //             $sl->rent = $rent;
-                //             $sl->prof = $prof;
-                //             $sl->taxable_inc = $taxable_inc;
-                //             $sl->income_tax = $xyz;
-                //             $sl->net_aft_inc_tax = $xyz;
-                //             $sl->resp = $xyz;
-                //             $sl->risk = $xyz;
-                //             $sl->vma = $xyz;
-                //             $sl->ent = $xyz;
-                //             $sl->dom = $xyz;
-                //             $sl->intr = $xyz;
-                //             $sl->tnt = $xyz;
-                //             $sl->back_pay = $xyz;
-                //             $sl->net_bef_ded = $xyz;
-                //             $sl->staff_loan = $xyz;
-                //             $sl->net_aft_ded = $xyz;
-                //             $sl->ssf_emp_cont = $xyz;
-                //             $sl->tot_ded = $xyz;
-                //             $sl->ssn = $xyz;
-                //             $sl->email = $xyz;
-                //             $sl->dept = $xyz;
-                //             $sl->region = $xyz;
-                //             $sl->bank = $xyz;
-                //             $sl->branch = $xyz;
-                //             $sl->acc_no = $xyz;
-                //             $sl->save();
-                //         } else {
-                //             $sl = Salary::firstOrCreate([
-                //                 'user_id' => auth()->user()->id,
-                //                 'month' => date('m-Y'),
-                //                 'employee_id' => $emp->id,
-                //                 'position' => 'No Position',
-                //                 'salary' => $emp->salary,
-                //                 'rent' => $send_rent,
-                //                 'prof' => $send_prof,
-                //                 'tot_income' => $total_income,
-                //                 'ssf' => $send_ssf,
-                //                 'taxable_inc' => $taxable_inc,
-                //                 'tax_pay' => $tax_pay,
-                //                 'first1' => $first1,
-                //                 'next1' => $next1,
-                //                 'next2' => $next2,
-                //                 'next3' => $next3,
-                //                 'next4' => $next4,
-                //                 'next5' => $next5,
-                //                 'net_amount' => $taxable_inc - $tax_pay,
-
-                //                 'user_id' => $next1,
-                //                 'month' => $next1,
-                //                 'employee_id' => $next1,
-                //                 'position' => $next1,
-                //                 'salary' => $next1,
-                //                 'ssf' => $next1,
-                //                 'sal_aft_ssf' => $next1,
-                //                 'rent' => $next1,
-                //                 'prof' => $next1,
-                //                 'taxable_inc' => $next1,
-                //                 'income_tax' => $next1,
-                //                 'net_aft_inc_tax' => $next1,
-                //                 'resp' => $next1,
-                //                 'risk' => $next1,
-                //                 'vma' => $next1,
-                //                 'ent' => $next1,
-                //                 'dom' => $next1,
-                //                 'intr' => $next1,
-                //                 'tnt' => $next1,
-                //                 'back_pay' => $next1,
-                //                 'net_bef_ded' => $next1,
-                //                 'staff_loan' => $next1,
-                //                 'net_aft_ded' => $next1,
-                //                 'ssf_emp_cont' => $next1,
-                //                 'tot_ded' => $next1,
-                //                 'ssn' => $next1,
-                //                 'email' => $next1,
-                //                 'dept' => $next1,
-                //                 'region' => $next1,
-                //                 'bank' => $next1,
-                //                 'branch' => $next1,
-                //                 'acc_no' => $next1,
-                //             ]);
-                //         }
-                        
-                //     } catch (\Throwable $th) {
-                //         throw $th;
-                //     }
-                // }
-
-                // return redirect(url()->previous())->with('success', 'Salaries Recalculated!');
-                // // return redirect(url()->previous())->with('success', 'Page Refresh Successful');
-
+                return 'Oops..!';
             break;
 
             case 'loan_setup':
@@ -978,6 +904,7 @@ class EmployeeController extends Controller
                     ]);
                 } catch (\Throwable $th) {
                     // throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
                 return redirect(url()->previous())->with('success', 'Loan Interest and Duration successfully set');
 
@@ -993,6 +920,7 @@ class EmployeeController extends Controller
                     ]);
                 } catch (\Throwable $th) {
                     // throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
                 return redirect(url()->previous())->with('success', 'Loan Interest and Duration successfully set');
 
@@ -1032,6 +960,7 @@ class EmployeeController extends Controller
                     ]);
                 } catch (\Throwable $th) {
                     throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
                 return redirect(url()->previous())->with('success', 'Salary Category Added Successfully');
 
@@ -1046,6 +975,7 @@ class EmployeeController extends Controller
                     ]);
                 } catch (\Throwable $th) {
                     throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
                 return redirect(url()->previous())->with('success', '`'.$request->input('dept_name').'` Successfully Added to Departments');
 
@@ -1094,6 +1024,7 @@ class EmployeeController extends Controller
 
                 } catch (\Throwable $th) {
                     throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
                 return redirect(url()->previous())->with('success', '`'.$request->input('allow_name').'` Successfully Added to Allowances');
 
@@ -1116,6 +1047,23 @@ class EmployeeController extends Controller
                 ];
                 return view('dash.pay_employee_view')->with($patch);
                 // End Search
+
+            break;
+
+            case 'search_alw':
+
+                // Search Allowance Data
+                $src = $request->input('search_alw');
+
+                $allowances = Allowance::where('fname', 'LIKE', '%'.$src.'%')->orderBy('fname', 'ASC')->paginate(20);
+                $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+                $patch = [
+                    'new_name' => '',
+                    'allowances' => $allowances,
+                    'new_allows' => AllowanceList::all(),
+                    'allowoverview' => $allowoverview
+                ];
+                return view('dash.pay_allowance')->with($patch);
 
             break;
 
@@ -1158,16 +1106,16 @@ class EmployeeController extends Controller
                 } else {
                     $dom = 'no';
                 }
-                if ($request->input('intr_allow')) {
-                    $intr = 'yes';
-                } else {
-                    $intr = 'no';
-                }
-                if ($request->input('tnt_allow')) {
-                    $tnt = 'yes';
-                } else {
-                    $tnt = 'no';
-                }
+                // if ($request->input('intr_allow')) {
+                //     $intr = 'yes';
+                // } else {
+                //     $intr = 'no';
+                // }
+                // if ($request->input('tnt_allow')) {
+                //     $tnt = 'yes';
+                // } else {
+                //     $tnt = 'no';
+                // }
                 if ($request->input('cola_allow')) {
                     $cola = 'yes';
                 } else {
@@ -1304,6 +1252,17 @@ class EmployeeController extends Controller
                             'staff_loan' => 0,
                             // 'loan_date_started','loan_bal','loan_montly_ded'
                         ]);
+
+                        if ($request->input('intr') == '') {
+                            $intr2 = 0;
+                        }else{
+                            $intr2 = $request->input('intr');
+                        }
+                        if ($request->input('tnt') == '') {
+                            $tnt2 = 0;
+                        }else{
+                            $tnt2 = $request->input('tnt');
+                        }
                 
                         $allow_check = Allowance::where('employee_id', $emp_insert->id)->get();
                         if (count($allow_check) < 1) {
@@ -1318,8 +1277,8 @@ class EmployeeController extends Controller
                                 'vma' => $vma,
                                 'ent' => $ent,
                                 'dom' => $dom,
-                                'intr' => $intr,
-                                'tnt' => $tnt,
+                                'intr' => $intr2,
+                                'tnt' => $tnt2,
                                 'cola' => $cola,
                                 'new1' => $new1,
                                 'new2' => $new2,
@@ -1355,10 +1314,98 @@ class EmployeeController extends Controller
 
                     } catch (\Throwable $th) {
                         throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                     }
 
                     return redirect(url()->previous())->with('success', $request->input('fname').'`s details successfully added');
                 }
+
+            break;
+
+            case 'add_allowexp':
+                $emp_id = $request->input('employee');
+                if ($emp_id == 'all') {
+                    return redirect(url()->previous())->with('error', 'Select name to proceed');
+                }
+                $emp = Employee::find($emp_id);
+                // return $emp_id;
+
+                $alx = Allowexp::where('employee_id', $emp_id)->latest()->first();
+                if ($alx) {
+                    $alx->del = 'no';
+                    $alx->save();
+                } else {
+                    $alv = Allowanceoverview::where('del', 'no')->latest()->first();
+                    try {
+                        $alx = Allowexp::firstOrCreate([
+                            'user_id' => auth()->user()->id,
+                            'employee_id' => $emp_id,
+                            'allowance_id' => $emp->allowance_id,
+                            'rent' => $alv->rent,
+                            'prof' => $alv->prof,
+                            'resp' => $alv->resp,
+                            'risk' => $alv->risk,
+                            'vma' => $alv->vma,
+                            'ent' => $alv->ent,
+                            'dom' => $alv->dom,
+                            'intr' => $alv->intr,
+                            'tnt' => $alv->tnt,
+                            'cola' => $alv->cola,
+                            'ssf' => $alv->ssf,
+                            'ssf1' => $alv->ssf1,
+                            'ssf2' => $alv->ssf2,
+                            'new1' => $alv->new1,
+                            'new2' => $alv->new2,
+                            'new3' => $alv->new3,
+                            'new4' => $alv->new4,
+                            'new5' => $alv->new5,
+                        ]);
+                    } catch (\Throwable $th) {
+                        throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
+                    }
+                }
+                
+
+                return redirect(url()->previous())->with('success', 'Allowance exception added for '.$emp->fname);
+
+            break;
+
+            case 'remove_allowexp':
+                // return 777;
+                $emp_id = $request->input('employee');
+                
+                $alv = Allowanceoverview::where('del', 'no')->latest()->first();
+                $alx = Allowexp::where('employee_id', $emp_id)->latest()->first();
+                if ($alx) {
+                    $alx->rent = $alv->rent;
+                    $alx->prof = $alv->prof;
+                    $alx->resp = $alv->resp;
+                    $alx->risk = $alv->risk;
+                    $alx->vma = $alv->vma;
+                    $alx->ent = $alv->ent;
+                    $alx->dom = $alv->dom;
+                    $alx->intr = $alv->intr;
+                    $alx->tnt = $alv->tnt;
+                    $alx->cola = $alv->cola;
+                    $alx->ssf = $alv->ssf;
+                    $alx->ssf1 = $alv->ssf1;
+                    $alx->ssf2 = $alv->ssf2;
+                    $alx->new1 = $alv->new1;
+                    $alx->new2 = $alv->new2;
+                    $alx->new3 = $alv->new3;
+                    $alx->new4 = $alv->new4;
+                    $alx->new5 = $alv->new5;
+                    $alx->del = 'yes';
+                    $alx->save();
+                    return redirect(url()->previous())->with('success', 'Record deletion successfull for '.$alx->employee->fname);
+                } else {
+                    return redirect(url()->previous())->with('error', 'Oops..! Records not found for '.$alx->employee->fname);
+                }
+                
+                    
+
+                // return redirect(url()->previous())->with('success', 'Page Refresh Successful');
 
             break;
 
@@ -1408,6 +1455,10 @@ class EmployeeController extends Controller
 
 
             // Update
+            case 'abc':
+                return 12;
+            break;
+
             case 'update_employee':
                 try {
                     $emp = Employee::find($id);
@@ -1491,6 +1542,7 @@ class EmployeeController extends Controller
 
                 } catch (\Throwable $th) {
                     throw $th;
+                        return redirect(url()->previous())->with('error', 'Oops..! An error occured');
                 }
 
                 $patch = [
@@ -1505,7 +1557,7 @@ class EmployeeController extends Controller
                 $dept = Department::find($id);
                 $dept->dept_name = $request->input('dept_name');
                 $dept->save();
-                return redirect(url()->previous())->with('Success', $dept->name.' Updated Successfully!');
+                return redirect(url()->previous())->with('success', $dept->name.' Updated Successfully!');
             break;
 
             case 'update_user':
@@ -1515,7 +1567,7 @@ class EmployeeController extends Controller
                 $user->contact = $request->input('contact');
                 $user->status = $request->input('status');
                 $user->save();
-                return redirect(url()->previous())->with('Success', $user->name.' Updated Successfully!');
+                return redirect(url()->previous())->with('success', $user->name.' Updated Successfully!');
             break;
 
             case 'update_sal_cat':
@@ -1525,7 +1577,7 @@ class EmployeeController extends Controller
                 // $scat->position = $request->input('position');
                 $scat->basic_sal = $request->input('basic_sal');
                 $scat->save();
-                return redirect(url()->previous())->with('Success', 'Position `'.$scat->position.'` Successfully Updated!');
+                return redirect(url()->previous())->with('success', 'Position `'.$scat->position.'` Successfully Updated!');
             break;
 
             case 'update_allow':
@@ -1551,7 +1603,7 @@ class EmployeeController extends Controller
                 }
                 $alo->save();
 
-                return redirect(url()->previous())->with('Success', $allow->name.' Updated Successfully!');
+                return redirect(url()->previous())->with('success', $allow->name.' Updated Successfully!');
             break;
 
 
@@ -1573,14 +1625,41 @@ class EmployeeController extends Controller
                 $emp->staff_loan = 0;
                 $emp->loan_bal = 0;
                 $emp->save();
-                return redirect(url()->previous())->with('Success', 'Loan details successfully cleared!');
+                return redirect(url()->previous())->with('success', 'Loan details successfully cleared!');
             break;
 
             case 'del_employee':
                 $emp = Employee::find($id);
                 $emp->del = 'yes';
                 $emp->save();
-                return redirect(url()->previous())->with('Success', $emp->name.' Deleted!');
+                return redirect(url()->previous())->with('success', $emp->fname.'`s records Deleted!');
+            break;
+
+            case 'del_allowexp':
+
+                $alv = Allowanceoverview::where('del', 'no')->latest()->first();
+                $alx = Allowexp::find($id);
+                $alx->rent = $alv->rent;
+                $alx->prof = $alv->prof;
+                $alx->resp = $alv->resp;
+                $alx->risk = $alv->risk;
+                $alx->vma = $alv->vma;
+                $alx->ent = $alv->ent;
+                $alx->dom = $alv->dom;
+                $alx->intr = $alv->intr;
+                $alx->tnt = $alv->tnt;
+                $alx->cola = $alv->cola;
+                $alx->ssf = $alv->ssf;
+                $alx->ssf1 = $alv->ssf1;
+                $alx->ssf2 = $alv->ssf2;
+                $alx->new1 = $alv->new1;
+                $alx->new2 = $alv->new2;
+                $alx->new3 = $alv->new3;
+                $alx->new4 = $alv->new4;
+                $alx->new5 = $alv->new5;
+                $alx->del = 'yes';
+                $alx->save();
+                return redirect(url()->previous())->with('success', 'Record deletion successfull for '.$alx->employee->fname);
             break;
             
             // Restore
@@ -1588,7 +1667,7 @@ class EmployeeController extends Controller
                 $emp = Employee::find($id);
                 $emp->del = 'no';
                 $emp->save();
-                return redirect(url()->previous())->with('Success', $emp->name.' Successfully Restored!');
+                return redirect(url()->previous())->with('success', $emp->name.' Successfully Restored!');
             break;
 
 
@@ -1600,13 +1679,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->rent = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Rent Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Rent Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_rent':
                 $allow = Allowance::find($id);
                 $allow->rent = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Rent Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Rent Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Professional Allowance
@@ -1614,13 +1693,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->prof = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Professional Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Professional Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_prof':
                 $allow = Allowance::find($id);
                 $allow->prof = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Professional Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Professional Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Responsible Allowance
@@ -1628,13 +1707,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->resp = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Responsible Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Responsible Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_resp':
                 $allow = Allowance::find($id);
                 $allow->resp = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Responsible Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Responsible Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Risk Allowance
@@ -1642,13 +1721,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->risk = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Risk Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Risk Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_risk':
                 $allow = Allowance::find($id);
                 $allow->risk = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Risk Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Risk Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // VMA Allowance
@@ -1656,13 +1735,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->vma = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'VMA Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'VMA Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_vma':
                 $allow = Allowance::find($id);
                 $allow->vma = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'VMA Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'VMA Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Entertainment Allowance
@@ -1670,13 +1749,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->ent = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Entertainment Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Entertainment Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_ent':
                 $allow = Allowance::find($id);
                 $allow->ent = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Entertainment Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Entertainment Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Domestic Allowance
@@ -1684,27 +1763,38 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->dom = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Domestic Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Domestic Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_dom':
                 $allow = Allowance::find($id);
                 $allow->dom = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Domestic Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Domestic Allowance for '.$allow->fname.' has been Removed!');
             break;
+
+
+            // Set General T&T / Intr. Allowance
+            case 'set_tnt_intr':
+                $allow = Allowance::find($id);
+                $allow->tnt = $request->input('tnt');
+                $allow->intr = $request->input('intr');
+                $allow->save();
+                return redirect(url()->previous())->with('success', 'T&T / Internet & Other Utilities Allowance Allowance for '.$allow->fname.' Successfully Updated!');
+            break;
+
 
             // Internet & Other Utilities Allowance
             case 'set_intr':
                 $allow = Allowance::find($id);
                 $allow->intr = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Internet & Other Utilities Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Internet & Other Utilities Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_intr':
                 $allow = Allowance::find($id);
-                $allow->intr = 'no';
+                $allow->intr = 0;
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Internet & Other Utilities Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Internet & Other Utilities Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // T&T Allowance
@@ -1712,13 +1802,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->tnt = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'T&T Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'T&T Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_tnt':
                 $allow = Allowance::find($id);
-                $allow->tnt = 'no';
+                $allow->tnt = 0;
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'T&T Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'T&T Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // Cola Allowance
@@ -1726,13 +1816,13 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->cola = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Cola Allowance for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', 'Cola Allowance for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_cola':
                 $allow = Allowance::find($id);
                 $allow->cola = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', 'Cola Allowance for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', 'Cola Allowance for '.$allow->fname.' has been Removed!');
             break;
 
             // New Allowances
@@ -1743,14 +1833,14 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->new1 = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new1->allow_name.' for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', $new1->allow_name.' for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_new1':
                 $new1 = AllowanceList::find(1);
                 $allow = Allowance::find($id);
                 $allow->new1 = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new1->allow_name.' for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', $new1->allow_name.' for '.$allow->fname.' has been Removed!');
             break;
 
             // New2
@@ -1759,14 +1849,14 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->new2 = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new2->allow_name.' for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', $new2->allow_name.' for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_new2':
                 $new2 = AllowanceList::find(2);
                 $allow = Allowance::find($id);
                 $allow->new2 = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new2->allow_name.' for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', $new2->allow_name.' for '.$allow->fname.' has been Removed!');
             break;
 
             // New3
@@ -1775,14 +1865,14 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->new3 = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new3->allow_name.' for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', $new3->allow_name.' for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_new3':
                 $new3 = AllowanceList::find(3);
                 $allow = Allowance::find($id);
                 $allow->new3 = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new3->allow_name.' for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', $new3->allow_name.' for '.$allow->fname.' has been Removed!');
             break;
 
             // New4
@@ -1791,14 +1881,14 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->new4 = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new4->allow_name.' for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', $new4->allow_name.' for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_new4':
                 $new4 = AllowanceList::find(4);
                 $allow = Allowance::find($id);
                 $allow->new4 = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new4->allow_name.' for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', $new4->allow_name.' for '.$allow->fname.' has been Removed!');
             break;
 
             // New5
@@ -1807,14 +1897,72 @@ class EmployeeController extends Controller
                 $allow = Allowance::find($id);
                 $allow->new5 = 'yes';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new5->allow_name.' for '.$allow->fname.' Successfully Set!');
+                return redirect(url()->previous())->with('success', $new5->allow_name.' for '.$allow->fname.' Successfully Set!');
             break;
             case 'remove_new5':
                 $new5 = AllowanceList::find(5);
                 $allow = Allowance::find($id);
                 $allow->new5 = 'no';
                 $allow->save();
-                return redirect(url()->previous())->with('Success', $new5->allow_name.' for '.$allow->fname.' has been Removed!');
+                return redirect(url()->previous())->with('success', $new5->allow_name.' for '.$allow->fname.' has been Removed!');
+            break;
+
+
+
+            case 'up_allowexp':
+                // return $id;
+                if ($request->input('new1')) {
+                    $new1 = $request->input('new1');
+                } else {
+                    $new1 = 0;
+                }
+                if ($request->input('new2')) {
+                    $new2 = $request->input('new2');
+                } else {
+                    $new2 = 0;
+                }
+                if ($request->input('new3')) {
+                    $new3 = $request->input('new3');
+                } else {
+                    $new3 = 0;
+                }
+                if ($request->input('new4')) {
+                    $new4 = $request->input('new4');
+                } else {
+                    $new4 = 0;
+                }
+                if ($request->input('new5')) {
+                    $new5 = $request->input('new5');
+                } else {
+                    $new5 = 0;
+                }
+                
+                $alx = Allowexp::find($id);
+                $alx->rent = $request->input('rent');
+                $alx->prof = $request->input('prof');
+                $alx->resp = $request->input('resp');
+                $alx->risk = $request->input('risk');
+                $alx->vma = $request->input('vma');
+                $alx->ent = $request->input('ent');
+                $alx->dom = $request->input('dom');
+                $alx->intr = $request->input('intr');
+                $alx->tnt = $request->input('tnt');
+                $alx->cola = $request->input('cola');
+                // $alx->ssf = $request->input('ssf');
+                // $alx->ssf1 = $request->input('ssf1');
+                // $alx->ssf2 = $request->input('ssf2');
+                $alx->new1 = $new1;
+                $alx->new2 = $new2;
+                $alx->new3 = $new3;
+                $alx->new4 = $new4;
+                $alx->new5 = $new5;
+                // $alv->del = 'yes';
+                $alx->save();
+                    
+
+                return redirect(url()->previous())->with('success', 'Allowance exception values updated for '.$alx->employee->fname);
+                // return redirect(url()->previous())->with('success', 'Page Refresh Successful');
+
             break;
 
         }

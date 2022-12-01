@@ -155,14 +155,6 @@
                                     <input type="file" name="ex_file" multiple class="form-control" id="inputGroupFile01" >
                                 </div>
 
-                                <!--div class="input-group mb-8">
-                                    <label class="input-group-text" for="inputGroupSelect01">Upload For</label>
-                                    <select name="use" class="form-select" id="inputGroupSelect01">
-                                        <option selected>Gallery Use</option>
-                                        <option>System Use</option>
-                                    </select>
-                                </div-->
-
                                 <div style="height: 20px"></div>
                                 <h6>NOTE</h6>
                                 {{-- <p class="gray_p">"Gallery Use" means image will be available to the public. ie. on gallery page</p> --}}

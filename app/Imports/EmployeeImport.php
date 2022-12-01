@@ -79,6 +79,11 @@ class EmployeeImport implements ToModel, WithStartRow, WithCalculatedFormulas
             'acc_no' => $row[33],
             'sub_div' => $row[34],
 
+            'sname' => $row[38],
+            'fname' => $row[39],
+            'oname' => $row[40],
+            'cola' => $row[41],
+
         ]);
 
     }

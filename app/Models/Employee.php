@@ -68,6 +68,10 @@ class Employee extends Model
         return $this->belongsTo('App\Models\Allowance');
     }
 
+    public function allowexp(){
+        return $this->belongsTo('App\Models\Allowexp');
+    }
+
     public function taxation(){
         return $this->hasMany('App\Models\Taxation');
     }

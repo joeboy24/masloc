@@ -174,7 +174,7 @@
                                 <div class="form-group has-icon-left">
                                     <div class="position-relative">
                                         <div class="form-group with-title mb-3">
-                                            <textarea name="company_add" class="form-control" rows="3" required>@if ($company) {{$company->comp_add}}@endif</textarea>
+                                            <textarea name="company_add" class="form-control" rows="3" required>@if ($company) {{$company->comp_add}} @endif</textarea>
                                             {{-- <textarea name="company_add" class="form-control" rows="3" placeholder="Address" required></textarea> --}}
                                             <label>Provide Address in Full</label>
                                         </div>

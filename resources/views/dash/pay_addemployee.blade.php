@@ -405,13 +405,23 @@
                                 <label class="col-md-5" for="vmaAlw"><input id="vmaAlw" type="checkbox" name="vma_allow"> &nbsp; Vehicle Maintainance </label>
                                 <label class="col-md-5" for="entAlw"><input id="entAlw" type="checkbox" name="ent_allow"> &nbsp; Entertainment </label>
                                 <label class="col-md-5" for="domAlw"><input id="domAlw" type="checkbox" name="dom_allow"> &nbsp; Domestic </label>
-                                <label class="col-md-5" for="intrAlw"><input id="intrAlw" type="checkbox" name="intr_allow"> &nbsp; Internet & Others </label>
-                                <label class="col-md-5" for="tntAlw"><input id="tntAlw" type="checkbox" name="tnt_allow"> &nbsp; T & T </label>
+                                {{-- <label class="col-md-5" for="intrAlw"><input id="intrAlw" type="checkbox" name="intr_allow"> &nbsp; Internet & Others </label> --}}
+                                {{-- <label class="col-md-5" for="tntAlw"><input id="tntAlw" type="checkbox" name="tnt_allow"> &nbsp; T & T </label> --}}
                                 <label class="col-md-5" for="colaAlw"><input id="colaAlw" type="checkbox" name="cola_allow"> &nbsp; Cola </label>
 
                                 @foreach ($allowances as $item)
                                     <label class="col-md-5" for="Alw{{$item->id}}"><input id="Alw{{$item->id}}" type="checkbox" name="allow{{$item->id}}"> &nbsp; {{$item->allow_name}} </label>
                                 @endforeach
+                            </div>
+
+                            <div class="filter_div">
+                                <i class="fa fa-car"></i> &nbsp; T & T
+                                <input type="number" min="0" placeholder="Type Amount eg. 300" name="tnt">
+                            </div>
+
+                            <div class="filter_div">
+                                <i class="fa fa-internet-explorer"></i> &nbsp; Int. & Others
+                                <input type="number" min="0" placeholder="Type Amount eg. 150" name="intr">
                             </div>
                             
                             <div class="form-group modal_footer">

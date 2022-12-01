@@ -43,6 +43,8 @@ Route::get('/add_dept', 'DashpagesController@pay_add_dept');
 Route::get('/adduser', 'DashpagesController@pay_adduser');
 Route::get('/companysetup', 'DashpagesController@pay_company');
 Route::get('/allowance_mgt', 'DashpagesController@pay_allowance_mgt');
+Route::get('/allowance_exp', 'DashpagesController@pay_allowexp');
+Route::get('/alawa', 'DashpagesController@alawa');
 // HR Pages
 Route::get('/leaves', 'HrpagesController@pay_leave');
 Route::get('/birthdays', 'HrpagesController@pay_birthdays');

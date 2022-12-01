@@ -139,11 +139,25 @@
             <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
             {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a> --}}
             <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="view_daily_report">&nbsp;<i class="fa fa-file-text color5"></i>&nbsp; Allowance/SSNIT Overview</p></a>
-            <button type="submit" name="store_action" value="insert_allowances" class="print_btn_small"><i class="fa fa-refresh"></i></button>
+            {{-- <button type="submit" name="store_action" value="insert_allowances" class="print_btn_small"><i class="fa fa-refresh"></i></button> --}}
+            <a href="/allowance_exp"><p class="print_report">&nbsp;<i class="fa fa-warning"></i>&nbsp; EXP</p></a>
+            <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button>
         </form>
+
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <form action="{{ url('/alawa') }}">
+                    @csrf
+                    <input type="hidden" name="check" value="allowance">
+                    <input type="text" name="search_alw" class="search_emp" placeholder="Search">
+                    <button class="search_btn" name="store_action" value="search_alw"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    {{ $allowances->links() }}
+    {{-- {{ $allowances->links() }} --}}
+    {{ $allowances->appends(['search_alw' => request()->query('search_alw')])->links() }}
 
     <div class="row">
         <div class="col-12 col-xl-12">
@@ -227,18 +241,50 @@
                                                      @endif
 
                                                     <!-- Internet Allowance -->
-                                                    @if ($alw->intr == 'no') 
-                                                        <button type="submit" name="update_action" value="set_intr" class="allow_btn color1" onclick="return confirm('Do you want to enable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; Int. & Util.</button>
+                                                    @if ($alw->intr == 'no' || $alw->intr == 0) 
+                                                        {{-- <button type="submit" name="update_action" value="set_intr" class="allow_btn color1" onclick="return confirm('Do you want to enable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; Int. & Util.</button> --}}
+                                                        <a data-bs-toggle="modal" data-bs-target="#tnt_intr{{$alw->id}}"><button type="button" class="allow_btn color1"><i class="fa fa-times"></i>&nbsp; Int. & Util.</button></a>
                                                     @else
-                                                        <button type="submit" name="update_action" value="remove_intr" class="allow_btn bg4" onclick="return confirm('Do you want to disable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Int. & Util.</button>
+                                                        {{-- <button type="submit" name="update_action" value="remove_intr" class="allow_btn bg4" onclick="return confirm('Do you want to disable Internet & Other Utilities Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; Int. & Util.</button> --}}
+                                                        <a data-bs-toggle="modal" data-bs-target="#tnt_intr{{$alw->id}}"><button type="button" class="allow_btn bg4"><i class="fa fa-check"></i>&nbsp; Int. & Util.</button></a>
                                                     @endif
   
                                                     <!-- TnT Allowance -->
-                                                    @if ($alw->tnt == 'no') 
-                                                        <button type="submit" name="update_action" value="set_tnt" class="allow_btn color1" onclick="return confirm('Do you want to enable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; T & T</button>
+                                                    @if ($alw->tnt == 'no' || $alw->tnt == 0) 
+                                                        {{-- <button type="submit" name="update_action" value="set_tnt" class="allow_btn color1" onclick="return confirm('Do you want to enable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-times"></i>&nbsp; T & T</button> --}}
+                                                        <a data-bs-toggle="modal" data-bs-target="#tnt_intr{{$alw->id}}"><button type="button" class="allow_btn color1"><i class="fa fa-times"></i>&nbsp; T & T</button></a>
                                                     @else
-                                                        <button type="submit" name="update_action" value="remove_tnt" class="allow_btn bg4" onclick="return confirm('Do you want to disable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; T & T</button>
+                                                        {{-- <button type="submit" name="update_action" value="remove_tnt" class="allow_btn bg4" onclick="return confirm('Do you want to disable T&T Allowance for {{$alw->fname}}?')"><i class="fa fa-check"></i>&nbsp; T & T</button> --}}
+                                                        <a data-bs-toggle="modal" data-bs-target="#tnt_intr{{$alw->id}}"><button type="button" class="allow_btn bg4"><i class="fa fa-check"></i>&nbsp; T & T</button></a>
                                                     @endif
+
+                                                    <!-- Filter Modal2 -->
+                                                    <div class="modal fade" id="tnt_intr{{$alw->id}}" tabindex="-1" role="dialog" aria-labelledby="modalRequestLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalRequestLabel">Edit T & T / Internet and Others</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="filter_div">
+                                                                    <i class="fa fa-internet-explorer"></i>&nbsp;&nbsp;&nbsp;Int/Ut (GhC)
+                                                                    <input type="number" step="any" @if ($alw->intr!='')value="{{$alw->intr}}" @endif min="0" name="intr" required>
+                                                                </div>
+                                                        
+                                                                <div class="filter_div">
+                                                                    <i class="fa fa-taxi"></i>&nbsp;&nbsp;&nbsp;T&T (GhC)
+                                                                    <input type="number" step="any" @if ($alw->tnt!='')value="{{$alw->tnt}}" @endif min="0" name="tnt" required>
+                                                                </div>
+                                            
+                                                                <div class="form-group modal_footer">
+                                                                    <button type="submit" name="update_action" value="set_tnt_intr" class="load_btn" onclick="return confirm('Are you sure you want to update these records!?')"><i class="fa fa-save"></i>&nbsp; Update</button>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        </div>
+                                                    </div>
 
                                                     <!-- Cola Allowance -->
                                                     @if ($alw->cola == 'no') 
@@ -288,6 +334,7 @@
                                                         <button type="submit" name="update_action" value="del_employee" class="my_trash" onclick="return confirm('Are you sure you want to delete this record?')"><i class="fa fa-trash"></i></button>
                                                     </td>
                                                 @endif --}}
+
                                             </form>
 
                                         </tr>
@@ -295,7 +342,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $allowances->links() }}
+                            {{ $allowances->appends(['search_alw' => request()->query('search_alw')])->links() }}
                         @else
                             <div class="alert alert-danger">
                                 No Records Found on Allowances

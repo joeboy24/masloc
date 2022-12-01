@@ -15,47 +15,48 @@ class CreateSalariesTable extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('month');
-            $table->string('taxation_id');
-            $table->string('employee_id');
-            $table->string('position');
-            $table->string('salary');
-            $table->string('ssf')->default(0);
-            $table->string('sal_aft_ssf')->default(0);
-            $table->string('rent')->default(0);
-            $table->string('prof')->default(0);
-            // $table->string('tot_income');
-            $table->string('taxable_inc')->default(0);
-            $table->string('income_tax')->default(0);
-            $table->string('net_aft_inc_tax')->default(0);
-            $table->string('resp')->default(0);
-            $table->string('risk')->default(0);
-            $table->string('vma')->default(0);
-            $table->string('ent')->default(0);
-            $table->string('dom')->default(0);
-            $table->string('intr')->default(0);
-            $table->string('tnt')->default(0);
-            $table->string('new1')->default(0);
-            $table->string('new2')->default(0);
-            $table->string('new3')->default(0);
-            $table->string('new4')->default(0);
-            $table->string('new5')->default(0);
-            $table->string('back_pay')->default(0);
-            $table->string('net_bef_ded')->default(0);
-            $table->string('staff_loan')->default(0);
-            $table->string('net_aft_ded')->default(0);
-            $table->string('ssf_emp_cont')->default(0);
-            $table->string('tot_ded')->default(0);
-            $table->string('ssn')->nullable();
-            $table->string('email')->nullable();
-            $table->string('dept')->nullable();
-            $table->string('region')->nullable();
-            $table->string('bank')->nullable();
-            $table->string('branch')->nullable();
-            $table->string('acc_no')->nullable();
-            // $table->string('net_amount');
-            $table->string('del')->default('no');
+            $table->string('user_id', 50);
+            $table->string('month', 50);
+            $table->string('taxation_id', 50);
+            $table->string('employee_id', 50);
+            $table->string('position', 50);
+            $table->string('salary', 50);
+            $table->string('ssf', 50)->default(0);
+            $table->string('sal_aft_ssf', 50)->default(0);
+            $table->string('rent', 50)->default(0);
+            $table->string('prof', 50)->default(0);
+            // $table->string('tot_income', 50);
+            $table->string('taxable_inc', 50)->default(0);
+            $table->string('income_tax', 50)->default(0);
+            $table->string('net_aft_inc_tax', 50)->default(0);
+            $table->string('resp', 50)->default(0);
+            $table->string('risk', 50)->default(0);
+            $table->string('vma', 50)->default(0);
+            $table->string('ent', 50)->default(0);
+            $table->string('dom', 50)->default(0);
+            $table->string('intr', 50)->default(0);
+            $table->string('tnt', 50)->default(0);
+            $table->string('cola', 50)->default(0);
+            $table->string('new1', 50)->default(0);
+            $table->string('new2', 50)->default(0);
+            $table->string('new3', 50)->default(0);
+            $table->string('new4', 50)->default(0);
+            $table->string('new5', 50)->default(0);
+            $table->string('back_pay', 50)->default(0);
+            $table->string('net_bef_ded', 50)->default(0);
+            $table->string('staff_loan', 50)->default(0);
+            $table->string('net_aft_ded', 50)->default(0);
+            $table->string('ssf_emp_cont', 50)->default(0);
+            $table->string('tot_ded', 50)->default(0);
+            $table->string('ssn', 50)->nullable();
+            $table->string('email', 50)->nullable();
+            $table->string('dept', 50)->nullable();
+            $table->string('region', 50)->nullable();
+            $table->string('bank', 50)->nullable();
+            $table->string('branch', 50)->nullable();
+            $table->string('acc_no', 50)->nullable();
+            // $table->string('net_amount', 50);
+            $table->string('del', 50)->default('no', 50);
             $table->timestamps();
         });
     }
@@ -67,6 +68,6 @@ class CreateSalariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salaries');
+        Schema::dropIfExists('salaries', 50);
     }
 }

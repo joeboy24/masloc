@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - PivoApps Hotel Assist</title>
+    <title>Dashboard - PivoApps Payroll</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="#"><img src="/maindir/images/coat2.png" alt="Logo" srcset="">{{session('company')->abrv}}<img src="/storage/classified/company/company_logo.png" alt="" srcset=""></a>
+                            <a href="#"><img src="/maindir/images/coat2.png" alt="Logo" srcset="">@if (session('company')) {{session('company')->abrv}} @else PivoApps @endif<img src="/storage/classified/company/company_logo.png" alt="" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>

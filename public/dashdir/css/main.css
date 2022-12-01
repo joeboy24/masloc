@@ -971,6 +971,20 @@
     /* font-size: 1.2em; */
 }
 
+.pnospace {
+    font-size: 0.8em;
+    line-height: 5px;
+}
+
+.staffloancol {
+    background: #9b000512!important;
+    border-right: 2px solid #fff;
+}
+
+.netcol {
+    background: #009b1a20!important;
+}
+
 
 
 

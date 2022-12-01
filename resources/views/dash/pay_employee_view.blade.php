@@ -136,16 +136,15 @@
         <form action="{{ action('EmployeeController@store') }}" method="POST">
             @csrf
             <a href="/"><p class="print_report">&nbsp;<i class="fa fa-chevron-left"></i>&nbsp; Back to Home</p></a>
-            <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i></p></a>
-            {{-- <a data-bs-toggle="modal" data-bs-target="#allow_overview"><p class="print_report">&nbsp;<i class="fa fa-file-text"></i>&nbsp; Allowance Overview</p></a>
-            <a href="/taxexport"><p class="view_daily_report">&nbsp;<i class="fa fa-download color5"></i>&nbsp; Download Excel</p></a> --}}
+            {{-- <a href="/emp_report"><p class="print_report">&nbsp;<i class="fa fa-print"></i></p></a> --}}
             <button type="submit" name="store_action" value="calc_taxation" class="print_btn_small"><i class="fa fa-refresh"></i></button>
         </form>
 
         <div class="row">
             <div class="col-12 col-md-8">
-                <form action="{{ action('EmployeeController@store') }}" method="POST">
+                <form action="{{ url('/employee') }}">
                     @csrf
+                    <input type="hidden" name="check" value="employee">
                     <input type="text" name="search_emp" class="search_emp" placeholder="Search">
                     <button class="search_btn" name="store_action" value="search_emp"><i class="fa fa-search"></i></button>
                 </form>
@@ -153,7 +152,7 @@
         </div>
     </div>
 
-    {{ $employees->links() }}
+    {{ $employees->appends(['search_emp' => request()->query('search_emp')])->links() }}
 
     <div class="row">
         <div class="col-12 col-xl-12">
@@ -410,7 +409,8 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $employees->links() }}
+                            {{ $employees->appends(['search_emp' => request()->query('search_emp')])->links() }}
+                            
                         @else
                             <div class="alert alert-danger">
                                 No Records Found on Employees

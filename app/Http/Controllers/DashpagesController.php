@@ -21,6 +21,7 @@ use App\Models\SalaryCat;
 use App\Models\Department;
 use App\Models\AllowanceList;
 use App\Models\Region;
+use App\Models\Allowexp;
 use Session;
 
 class DashpagesController extends Controller
@@ -30,12 +31,35 @@ class DashpagesController extends Controller
         $this->middleware(['auth', 'admin_auth']);
     } 
 
+    public function alawa(Request $request){
+
+        // Search Allowance
+        $src = $request->input('search_alw');
+        $allowances = Allowance::where('fname', 'LIKE', '%'.$src.'%')->orderBy('fname', 'ASC')->paginate(20);
+        $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+        $patch = [
+            'new_name' => '',
+            'allowances' => $allowances,
+            'new_allows' => AllowanceList::all(),
+            'allowoverview' => $allowoverview
+        ];
+        return view('dash.pay_allowance')->with($patch);
+    }
+
     public function pay_company(){
         $company = Company::find(1);
         return view('dash.pay_company')->with('company', $company);
     }
 
     public function pay_loan(){
+        $em = Employee::find(1);
+
+        // if ($em->loan) {
+        //     return 1;
+        // } else {
+        //     return 2;
+        // }
+        // return $em->loan->id;
 
         // $users = User::where('status', '!=', 'Student')->get();
         $loan_setup = LoanSetup::where('del', 'no')->latest()->first();
@@ -242,6 +266,23 @@ class DashpagesController extends Controller
             'allowance' => $allow,
         ];
         return view('dash.pay_allowancemgt')->with($patch);
+    }
+
+    public function pay_allowexp(){
+
+        $allowoverview = AllowanceOverview::where('del', 'no')->latest()->first();
+        if ($allowoverview == '') {
+            return redirect(url()->previous())->with('warning', 'Oops..! Define Allowance Percentages to proceed -> Employee / Allowances / Allowance/SSNIT Overview');
+        }
+
+        $allowexp = Allowexp::where('del', 'no')->orderBy('updated_at', 'DESC')->get();
+        $patch = [
+            'c' => 1,
+            'allowexp' => $allowexp,
+            'new_allows' => AllowanceList::all(),
+            'employees' => Employee::where('del', 'no')->orderBy('fname', 'ASC')->get(),
+        ];
+        return view('dash.pay_allowexp')->with($patch);
     }
 
 

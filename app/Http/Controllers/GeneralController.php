@@ -32,6 +32,12 @@ class GeneralController extends Controller
     } 
     
     public function index(){
+
+        // if (Session::get('https') != 'https'){
+        //     Session::put('https', 'https');
+        //     return redirect('https://payroll.pivoapps.net');
+        // }
+        
         $system_users = User::where('del', 'no')->count();
         $emp_count = Employee::where('del', 'no')->count();
         $leave_count = Leave::where('status', 'active')->count();

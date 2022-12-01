@@ -173,6 +173,7 @@
                                         <th>{{$allowoverview->dom}}% Domestic Help</th>
                                         <th>{{$allowoverview->intr}} Internet & Other Utilities</th>
                                         <th>{{$allowoverview->tnt}} T&T Allow</th>
+                                        <th>{{$allowoverview->cola}}% COLA</th>
 
                                         @if ($allowoverview->new1 != 0)
                                             @if ($new_allows[0]->allow_perc != 0)
@@ -229,8 +230,8 @@
                                         @endforeach --}}
                                         <th>Back Pay</th>
                                         <th>Net Salary Before Deduction</th>
-                                        <th>Staff Loan</th>
-                                        <th>Net Salary After Deduction</th>
+                                        <th class="staffloancol">Staff Loan</th>
+                                        <th class="netcol">Net Salary After Deduction</th>
                                         <th>13%/12.5% SSF EMPLOYERS CONT.</th>
                                         <th>Total Deductions</th>
                                         <th>SOCIAL SECURITY NUMBER</th>
@@ -270,6 +271,7 @@
                                             <td class="text-bold-500">{{number_format($slr->dom, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->intr, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->tnt, 2)}}</td>
+                                            <td class="text-bold-500">{{number_format($slr->cola, 2)}}</td>
                                             {{-- @if ($allowoverview->new1 != 0)
                                                 
                                             @endif --}}
@@ -281,8 +283,8 @@
 
                                             <td class="text-bold-500">{{number_format($slr->back_pay, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->net_bef_ded, 2)}}</td>
-                                            <td class="text-bold-500">{{number_format($slr->staff_loan, 2)}}</td>
-                                            <td class="text-bold-500">{{number_format($slr->net_aft_ded, 2)}}</td>
+                                            <td class="text-bold-500 staffloancol">{{number_format($slr->staff_loan, 2)}}</td>
+                                            <td class="text-bold-500 netcol">{{number_format($slr->net_aft_ded, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->ssf_emp_cont, 2)}}</td>
                                             <td class="text-bold-500">{{number_format($slr->tot_ded, 2)}}</td>
                                             <td class="text-bold-500">{{$slr->ssn}}</td>

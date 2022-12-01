@@ -238,7 +238,7 @@
 
                                                         <div class="filter_div">
                                                             <i class="fa fa-edit"></i>&nbsp;&nbsp; Loan Amount
-                                                            <input type="text" value="{{number_format($emp->loan->bal/2, 2)}}" step="any" min="0" placeholder="Enter Amount eg. 1200" name="interest" required>
+                                                            <input type="text" @if ($emp->loan) value="{{number_format($emp->loan->bal/2, 2)}}" @endif step="any" min="0" placeholder="Enter Amount eg. 1200" name="interest" required>
                                                         </div>
 
                                                         <div class="filter_div">
